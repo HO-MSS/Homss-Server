@@ -17,6 +17,11 @@ mybatis:
   mapper-locations: classpath:mybatis/mapper/**/*.xml
   config-location: classpath:mybatis/config/mybatis-config.xml
 
+jwt:
+  secret: ENC(WhM3DZgqGxEqMFdHgrUWU+lrAzH6qaZrn3ERE4fHtaMrhftyWuozH7AqIaJRSRbluu4uR8k2kN5Tdvd7QIzsf0Do9fURXxp2BN2LWaUKtEW/prJZPvDPckcek/0wFqCc07hjFNu/uWg82W663HY6KwmTmjDDz8mTwQFI28B7Np+91nMn8gwm6sbMFRCoZCvLmvfSpak3DruFgZWLpAusWTuYIZpMV8Wb5KSeC2jiZXsT42lVnujyRmDJ4vzjk6LS9d8LPsMojDvmYQ7qWIXF8wK/1kLZgOZuHxTmClCwgNI=)
+  access-expiration-seconds: ENC(JdWXvEgO3xHPGrIq1jWNmyqxyG27JYqB)
+  refresh-expiration-seconds: ENC(fHm74smygS1EiQ1icwBD37VHWNp7S/wo)
+
 ---
 spring:
   config:
