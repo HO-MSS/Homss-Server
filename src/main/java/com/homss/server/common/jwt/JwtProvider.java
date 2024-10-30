@@ -17,9 +17,9 @@ import java.util.Date;
 import static com.homss.server.common.exception.ExceptionCode.EXPIRED_TOKEN_ERROR;
 import static com.homss.server.common.exception.ExceptionCode.INVALIDATE_TOKEN_ERROR;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class JwtProvider {
 
     @Value("${jwt.secret}")
@@ -49,6 +49,7 @@ public class JwtProvider {
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(getSigninKey(SECRET_KEY), SignatureAlgorithm.HS256)
+                .claim("type", "ACCESS")
                 .compact();
     }
 
@@ -59,7 +60,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_TIME * 1000))
+                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .signWith(getSigninKey(SECRET_KEY), SignatureAlgorithm.HS256)
                 .claim("type", "REFRESH")
                 .compact();
