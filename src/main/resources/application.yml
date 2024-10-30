@@ -38,3 +38,15 @@ spring:
     url: ENC(AB35pCX7Ti3ydnKdPvFs76zabk81E/JBBXtffBV7PzcpUUhPf2efK51P9lCzFUCP)
     username: ENC(thovNYqvtjGDVr03lv8MAw==)
     password: ENC(9PyvaMVuvlH2+oYJIxMC+g==)
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:homss
+    username: sa
+    password:

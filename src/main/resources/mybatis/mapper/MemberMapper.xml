@@ -15,4 +15,13 @@
         WHERE member_id = #{id}
     </select>
 
+    <select id="findAll" resultType="member">
+        SELECT member_id, social_id, nickname, profile_image, solve_count, score, created_at, updated_at
+        FROM member
+    </select>
+
+    <delete id="deleteAll">
+        DELETE FROM member
+    </delete>
+
 </mapper>

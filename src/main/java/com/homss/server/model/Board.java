@@ -13,14 +13,15 @@ public class Board extends TimeModel {
 
     private Long boardId;
     private Long memberId;
-    private String type;
-    private String title;
     private String content;
+    private String boardType;
+    private String title;
+    private BoardStatus boardStatus;
 
-    public static Board of(Long memberId, String type, String title, String content) {
+    public static Board of(Long memberId, String boardType, String title, String content) {
         return Board.builder()
                 .memberId(memberId)
-                .type(type)
+                .boardType(boardType)
                 .title(title)
                 .content(content)
                 .build();

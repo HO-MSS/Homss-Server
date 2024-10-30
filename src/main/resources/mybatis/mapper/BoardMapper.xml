@@ -9,4 +9,9 @@
         VALUES (#{memberId}, #{type}, #{title}, #{content})
     </insert>
 
+    <select id="findAll" resultType="board">
+        SELECT board_id, member_id, content, board_type, title, board_status, created_at, updated_at
+        FROM board
+    </select>
+
 </mapper>
