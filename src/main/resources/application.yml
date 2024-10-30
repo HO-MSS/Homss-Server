@@ -1,17 +1,13 @@
 spring:
+  profiles:
+    active: dev
   config:
     import: optional:classpath:.env[.properties]
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(AB35pCX7Ti3ydnKdPvFs76zabk81E/JBBXtffBV7PzcpUUhPf2efK51P9lCzFUCP)
-    username: ENC(thovNYqvtjGDVr03lv8MAw==)
-    password: ENC(9PyvaMVuvlH2+oYJIxMC+g==)
 
   security:
     user:
       name: user
       password: 1234
-
 
   jasypt:
     encryptor:
@@ -20,3 +16,25 @@ spring:
 mybatis:
   mapper-locations: classpath:mybatis/mapper/**/*.xml
   config-location: classpath:mybatis/config/mybatis-config.xml
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(AB35pCX7Ti3ydnKdPvFs76zabk81E/JBBXtffBV7PzcpUUhPf2efK51P9lCzFUCP)
+    username: ENC(thovNYqvtjGDVr03lv8MAw==)
+    password: ENC(9PyvaMVuvlH2+oYJIxMC+g==)
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prov
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(AB35pCX7Ti3ydnKdPvFs76zabk81E/JBBXtffBV7PzcpUUhPf2efK51P9lCzFUCP)
+    username: ENC(thovNYqvtjGDVr03lv8MAw==)
+    password: ENC(9PyvaMVuvlH2+oYJIxMC+g==)
