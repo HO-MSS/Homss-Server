@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.como.server.mapper.MemberMapper">
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="memberId">
+        INSERT INTO member (social_id, nickname, profile_image)
+        VALUES (#{socialId}, #{nickname}, #{profileImage})
+    </insert>
+
+    <select id="findById" resultType="member">
+        SELECT member_id, social_id, nickname, profile_image, solve_count, score, created_at, updated_at
+        FROM member
+        WHERE member_id = #{id}
+    </select>
+
+</mapper>

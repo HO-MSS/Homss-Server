@@ -1,0 +1,22 @@
+spring:
+  config:
+    import: optional:classpath:.env[.properties]
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(AB35pCX7Ti3ydnKdPvFs76zabk81E/JBBXtffBV7PzcpUUhPf2efK51P9lCzFUCP)
+    username: ENC(thovNYqvtjGDVr03lv8MAw==)
+    password: ENC(9PyvaMVuvlH2+oYJIxMC+g==)
+
+  security:
+    user:
+      name: user
+      password: 1234
+
+
+  jasypt:
+    encryptor:
+      password: ${JASYPT_ENCRYPTOR_PASSWORD}
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/**/*.xml
+  config-location: classpath:mybatis/config/mybatis-config.xml
