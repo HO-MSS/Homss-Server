@@ -20,8 +20,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Add Jasypt Password
-        env:
-          JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+        run: echo "JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}" >> $GITHUB_ENV
 
       - name: Grant execute permission for gradlew
         run : chmod +x gradlew
