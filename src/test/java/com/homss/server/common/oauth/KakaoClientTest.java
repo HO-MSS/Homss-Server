@@ -1,4 +1,5 @@
 package com.homss.server.common.oauth;
+
 import com.homss.server.ServerApplicationTests;
 import com.homss.server.common.exception.ApplicationException;
 import org.assertj.core.api.Assertions;
@@ -8,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,10 +32,9 @@ public class KakaoClientTest extends ServerApplicationTests {
         // given
         Long EXPECTED_SOCIAL_ID = 123456789L;
 
-        ResponseEntity<String> responseEntity = mock(ResponseEntity.class);
-        String jsonResponse = "{\"id\":\"" + EXPECTED_SOCIAL_ID + "\"}";
+        String responseBody = "{\"id\":\"" + EXPECTED_SOCIAL_ID + "\"}";
+        ResponseEntity<String> responseEntity = new ResponseEntity<>(responseBody, HttpStatus.OK);
 
-        when(responseEntity.getBody()).thenReturn(jsonResponse);
         when(restTemplate.exchange(eq(KAKAO_API_URL), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
                 .thenReturn(responseEntity);
 
@@ -64,10 +65,9 @@ public class KakaoClientTest extends ServerApplicationTests {
         // given
         String INVALID_FIELD_NAME = "ID";
 
-        ResponseEntity<String> responseEntity = mock(ResponseEntity.class);
-        String jsonResponse = "{\""+INVALID_FIELD_NAME+"\":\"" + 123456789L + "\"}";
+        String responseBody = "{\""+INVALID_FIELD_NAME+"\":\"" + 123456789L + "\"}";
+        ResponseEntity<String> responseEntity = new ResponseEntity<>(responseBody, HttpStatus.OK);
 
-        when(responseEntity.getBody()).thenReturn(jsonResponse);
         when(restTemplate.exchange(eq(KAKAO_API_URL), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
                 .thenReturn(responseEntity);
 
