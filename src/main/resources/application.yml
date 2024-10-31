@@ -37,7 +37,7 @@ spring:
 spring:
   config:
     activate:
-      on-profile: prov
+      on-profile: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ENC(cOGGxC3nDt8JmKWvaNA5kbcnwyMZjoHyTIGkyKQux/aze4k6ABlc3WmzO6kIuWK8)
