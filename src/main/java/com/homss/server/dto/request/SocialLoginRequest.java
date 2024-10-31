@@ -1,4 +1,7 @@
 package com.homss.server.dto.request;
 
-public record SocialLoginRequest(String socialAccessToken) {
+
+import jakarta.validation.constraints.NotNull;
+
+public record SocialLoginRequest(@NotNull String socialAccessToken) {
 }
