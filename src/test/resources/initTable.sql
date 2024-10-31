@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS member (
     member_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     social_id BIGINT NOT NULL,
-    nickname VARCHAR(255) NOT NULL,
-    profile_image TEXT NOT NULL,
+    nickname VARCHAR(255),
+    profile_image TEXT,
     solve_count INT DEFAULT 0 NOT NULL,
     score BIGINT DEFAULT 0 NOT NULL,
     baekjoon_id VARCHAR(255),

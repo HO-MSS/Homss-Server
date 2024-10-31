@@ -19,7 +19,7 @@ public class JwtProviderTest extends ServerApplicationTests {
         String accessToken = jwtProvider.createAccessToken(1L);
 
         // then
-        assertThat(jwtProvider.getUserId(accessToken)).isEqualTo(1L);
+        assertThat(jwtProvider.getMemberId(accessToken)).isEqualTo(1L);
     }
 
     @Test
@@ -29,6 +29,6 @@ public class JwtProviderTest extends ServerApplicationTests {
         String refreshToken = jwtProvider.createRefreshToken(1L);
 
         // then
-        assertThat(jwtProvider.getUserId(refreshToken)).isEqualTo(1L);
+        assertThat(jwtProvider.getMemberId(refreshToken)).isEqualTo(1L);
     }
 }
