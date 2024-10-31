@@ -11,7 +11,7 @@
         <typeAlias type="com.homss.server.model.BoardLike" alias="board_like"/>
         <typeAlias type="com.homss.server.model.Comment" alias="comment"/>
         <typeAlias type="com.homss.server.model.CommentLike" alias="comment_like"/>
-        <typeAlias type="com.homss.server.model.Member" alias="member"/>
+        <typeAlias type="com.homss.server.model.member.Member" alias="member"/>
         <typeAlias type="com.homss.server.model.SolveProblem" alias="solve_problem"/>
     </typeAliases>
 

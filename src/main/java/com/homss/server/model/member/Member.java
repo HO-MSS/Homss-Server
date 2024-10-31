@@ -1,4 +1,4 @@
-package com.homss.server.model;
+package com.homss.server.model.member;
 
 import com.homss.server.common.modle.TimeModel;
 import lombok.*;
@@ -18,6 +18,7 @@ public class Member extends TimeModel {
     private String profileImage;
     private Integer solveCount;
     private Long score;
+    private MemberStatus memberStatus;
 
     public static Member of(Long socialId, String nickname, String profileImage) {
         return Member.builder()
@@ -27,4 +28,9 @@ public class Member extends TimeModel {
                 .build();
     }
 
+    public static Member create(Long socialId) {
+        return Member.builder()
+                .socialId(socialId)
+                .build();
+    }
 }

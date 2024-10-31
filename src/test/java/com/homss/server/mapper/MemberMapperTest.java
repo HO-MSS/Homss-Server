@@ -1,7 +1,7 @@
 package com.homss.server.mapper;
 
 import com.homss.server.ServerApplicationTests;
-import com.homss.server.model.Member;
+import com.homss.server.model.member.Member;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -64,4 +64,18 @@ public class MemberMapperTest extends ServerApplicationTests {
         //then
         Assertions.assertThat(allMember.size()).isEqualTo(2);
     }
+    @Test
+    @DisplayName("소셜 아이디로 멤버 조회")
+    void findBySocialId_test() {
+        //given
+        memberMapper.save(Member.of(1L, "member", "url"));
+
+        //when
+        Member member = memberMapper.findBySocialId(1L).orElse(null);
+
+        //then
+        Assertions.assertThat(member).isNotNull();
+        Assertions.assertThat(member.getSocialId()).isEqualTo(1L);
+    }
+
 }

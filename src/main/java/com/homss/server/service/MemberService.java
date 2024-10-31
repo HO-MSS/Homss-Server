@@ -1,6 +1,6 @@
 package com.homss.server.service;
 
-import com.homss.server.model.Member;
+import com.homss.server.model.member.Member;
 import com.homss.server.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
