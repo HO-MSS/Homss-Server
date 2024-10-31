@@ -1,49 +1,52 @@
-#name: dev-ci-cd
-#
-#on:
-#  push:
-#    branches: [ develop ]
-#
-#jobs:
-#  dev:
-#    name: dev
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Checkout the code
-#        uses: actions/checkout@v3
-#
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '17'
-#          distribution: 'temurin'
-#
-#      - name: Grant execute permission for gradlew
-#        run : chmod +x gradlew
-#
-#      - name: Build with Gradle
-#        run: ./gradlew clean build
-#
-#      - name: Docker build
-#        run: |
-#          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-#          docker build -t dev-como-server .
-#          docker tag dev-como-server ${{ secrets.DOCKERHUB_USERNAME }}/dev-como-server:latest
-#          docker push ${{ secrets.DOCKERHUB_USERNAME }}/dev-como-server:latest
-#
-#      - name: Install SSH key
-#        uses: webfactory/ssh-agent@v0.7.0
-#        with:
-#          ssh-private-key: ${{ secrets.REMOTE_PRIVATE_KEY }}
-#
-#      - name: Deploy to Local Server
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.REMOTE_IP }}
-#          username: ${{ secrets.REMOTE_USER }}
-#          password: ${{ secrets.LOCAL_SERVER_SSH_PASSWORD }}
-#          key: ${{ secrets.REMOTE_PRIVATE_KEY }}
-#          port: ${{ secrets.REMOTE_SSH_PORT }}
-#          script: |
-#            sh /home/ubuntu/dev-deploy.sh
+name: dev-ci-cd
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  dev:
+    name: dev
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Add Jasypt Password
+        env:
+          JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+
+      - name: Grant execute permission for gradlew
+        run : chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean build
+
+      - name: Docker build
+        run: |
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+          docker build -t ${{ secrets.DOCKER_DEV_IMAGE_NAME }} .
+          docker tag ${{ secrets.DOCKER_DEV_IMAGE_NAME }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_DEV_IMAGE_NAME }}:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_DEV_IMAGE_NAME }}:latest
+
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.REMOTE_PRIVATE_KEY }}
+
+      - name: Deploy to Local Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.REMOTE_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          script: |
+            sh /home/ubuntu/dev-deploy.sh

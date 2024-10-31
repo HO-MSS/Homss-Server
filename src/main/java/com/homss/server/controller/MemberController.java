@@ -1,6 +1,6 @@
 package com.homss.server.controller;
 
-import com.homss.server.model.Member;
+import com.homss.server.model.member.Member;
 import com.homss.server.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

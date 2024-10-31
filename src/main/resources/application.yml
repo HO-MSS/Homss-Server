@@ -17,6 +17,11 @@ mybatis:
   mapper-locations: classpath:mybatis/mapper/**/*.xml
   config-location: classpath:mybatis/config/mybatis-config.xml
 
+jwt:
+  secret: ENC(WhM3DZgqGxEqMFdHgrUWU+lrAzH6qaZrn3ERE4fHtaMrhftyWuozH7AqIaJRSRbluu4uR8k2kN5Tdvd7QIzsf0Do9fURXxp2BN2LWaUKtEW/prJZPvDPckcek/0wFqCc07hjFNu/uWg82W663HY6KwmTmjDDz8mTwQFI28B7Np+91nMn8gwm6sbMFRCoZCvLmvfSpak3DruFgZWLpAusWTuYIZpMV8Wb5KSeC2jiZXsT42lVnujyRmDJ4vzjk6LS9d8LPsMojDvmYQ7qWIXF8wK/1kLZgOZuHxTmClCwgNI=)
+  access-expiration-seconds: ENC(JdWXvEgO3xHPGrIq1jWNmyqxyG27JYqB)
+  refresh-expiration-seconds: ENC(fHm74smygS1EiQ1icwBD37VHWNp7S/wo)
+
 ---
 spring:
   config:
@@ -24,9 +29,9 @@ spring:
       on-profile: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(AB35pCX7Ti3ydnKdPvFs76zabk81E/JBBXtffBV7PzcpUUhPf2efK51P9lCzFUCP)
-    username: ENC(thovNYqvtjGDVr03lv8MAw==)
-    password: ENC(9PyvaMVuvlH2+oYJIxMC+g==)
+    url: ENC(cOGGxC3nDt8JmKWvaNA5kbcnwyMZjoHyTIGkyKQux/aze4k6ABlc3WmzO6kIuWK8)
+    username: ENC(8MGbO9ZUDilO406b9ajIfw==)
+    password: ENC(SxiW7EAHGQT0FFeV6IcGjg==)
 
 ---
 spring:
@@ -35,6 +40,18 @@ spring:
       on-profile: prov
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(AB35pCX7Ti3ydnKdPvFs76zabk81E/JBBXtffBV7PzcpUUhPf2efK51P9lCzFUCP)
-    username: ENC(thovNYqvtjGDVr03lv8MAw==)
-    password: ENC(9PyvaMVuvlH2+oYJIxMC+g==)
+    url: ENC(cOGGxC3nDt8JmKWvaNA5kbcnwyMZjoHyTIGkyKQux/aze4k6ABlc3WmzO6kIuWK8)
+    username: ENC(8MGbO9ZUDilO406b9ajIfw==)
+    password: ENC(SxiW7EAHGQT0FFeV6IcGjg==)
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:homss
+    username: sa
+    password:

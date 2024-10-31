@@ -1,13 +1,11 @@
 package com.homss.server;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
+@ActiveProfiles("test")
+@Sql({"classpath:initTable.sql"})
 @SpringBootTest
-class ServerApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
+public class ServerApplicationTests {
 }

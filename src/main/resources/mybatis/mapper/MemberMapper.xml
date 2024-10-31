@@ -9,10 +9,27 @@
         VALUES (#{socialId}, #{nickname}, #{profileImage})
     </insert>
 
+    <delete id="deleteAll">
+        DELETE FROM member
+    </delete>
+
     <select id="findById" resultType="member">
-        SELECT member_id, social_id, nickname, profile_image, solve_count, score, created_at, updated_at
+        SELECT member_id, social_id, nickname, profile_image, solve_count, score, member_status, created_at, updated_at
         FROM member
         WHERE member_id = #{id}
     </select>
+
+    <select id="findBySocialId" resultType="member">
+        SELECT member_id, social_id, nickname, profile_image, solve_count, score, member_status, created_at, updated_at
+        FROM member as m
+        WHERE m.social_id = #{socialId}
+    </select>
+
+    <select id="findAll" resultType="member">
+        SELECT member_id, social_id, nickname, profile_image, solve_count, score, member_status, created_at, updated_at
+        FROM member
+    </select>
+
+
 
 </mapper>
