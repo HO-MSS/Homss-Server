@@ -8,7 +8,7 @@
 - [ ] 의존성, 환경 변수, 빌드 관련 코드 업데이트
 
 ### :sparkles:반영 브랜치
-- ex) feature/login -> develop
+- ex) feature/issue-1 -> develop
 
 ### :memo:변경 사항
 -  ex) 로그인 시, 구글 소셜 로그인 기능을 추가했습니다.
