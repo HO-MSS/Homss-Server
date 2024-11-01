@@ -4,6 +4,7 @@ import com.homss.server.common.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,6 +64,19 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(REQUEST_BODY_NOT_FOUND_ERROR.getHttpStatus())
                 .body(ErrorResponse.of(REQUEST_BODY_NOT_FOUND_ERROR.getCode(), REQUEST_BODY_NOT_FOUND_ERROR.getMessage()));
+    }
+
+    @ExceptionHandler(BadSqlGrammarException.class)
+    public ResponseEntity<ErrorResponse> handleBadSqlGrammarException(BadSqlGrammarException exception) {
+        log.error(LOG_TEMPLATE,
+                "BadSqlGrammarException",
+                exception.getClass().getSimpleName(),
+                INTERNAL_SERVER_ERROR.getCode(),
+                exception.getMessage(),
+                exception.getStackTrace()
+        );
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR.getHttpStatus())
+                .body(ErrorResponse.of(INTERNAL_SERVER_ERROR.getCode(), INTERNAL_SERVER_ERROR.getMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)
