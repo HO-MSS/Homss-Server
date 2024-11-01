@@ -40,7 +40,7 @@ spring:
       on-profile: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(HK/POIm7VjLZTgiE6SDtMfd2+vFgDHjEfjF8/1bpkPqmLko5oWk9QdBvpLXYEWt8o84L3nFZSNbWq042UAbu56qeRtzrbycWBEdnagxaLX490H7U74UftCyarZlaC5p3z+cmgRqGOrTMDMfjyKssbm363/1Vc2Ol6sOX7NYReqj6n6qAeUEsPQ==)
+    url: ENC(rDpZsmSdE33bvXiA4Vs9qTmmJOI4KKcvg4Hhch37u0dBCj1v68UAQskPX75tmSUtKx4AGkibygZ7RKDM6X1J/k4FreZ5u14sReRyMWsEVW6V+P8IybjOLg==)
     username: ENC(PMOBvuWizl7GiYtdZ3BiIQ==)
     password: ENC(93jNZByvGeMBPwxPhuRiUHrUlvAi2ynm)
 
