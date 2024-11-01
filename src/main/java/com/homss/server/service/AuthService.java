@@ -1,5 +1,7 @@
 package com.homss.server.service;
 
+import com.homss.server.common.exception.ApplicationException;
+import com.homss.server.common.exception.ExceptionCode;
 import com.homss.server.common.oauth.KakaoClient;
 import com.homss.server.common.jwt.JwtProvider;
 import com.homss.server.dto.etc.MemberJwtTokens;
@@ -10,6 +12,8 @@ import com.homss.server.model.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.homss.server.common.exception.ExceptionCode.MEMBER_NOT_FOUND_ERROR;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,14 @@ public class AuthService {
         MemberJwtTokens memberJwtTokens = getMemberJwtTokens(member);
         changeMemberRefreshToken(member, memberJwtTokens.refreshToken());
         return SocialLoginResponse.from(memberJwtTokens);
+    }
+
+    @Transactional
+    public void logout(Long memberId) {
+        Member member = memberMapper.findById(memberId)
+                .orElseThrow(() -> ApplicationException.create(MEMBER_NOT_FOUND_ERROR));
+
+        changeMemberRefreshToken(member, null);
     }
 
     private Member getMember(Long socialId) {

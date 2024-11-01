@@ -66,4 +66,21 @@ public class AuthServiceTest extends ServerApplicationTests {
         Assertions.assertThat(member.getSocialId()).isEqualTo(memberSocialId);
         Assertions.assertThat(member.getRefreshToken()).isEqualTo(response.refreshToken());
     }
+
+    @Test
+    @DisplayName("로그아웃")
+    void logout_test() {
+        // given
+        Member newMember = Member.create(1L);
+        memberMapper.save(newMember);
+        newMember.changeRefreshToken("RefreshToken");
+        memberMapper.changeMemberRefreshToken(newMember);
+
+        // when
+        authService.logout(newMember.getMemberId());
+
+        // then
+        Member member = memberMapper.findById(newMember.getMemberId()).orElse(null);
+        Assertions.assertThat(member.getRefreshToken()).isNull();
+    }
 }

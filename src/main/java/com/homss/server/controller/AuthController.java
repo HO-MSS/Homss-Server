@@ -1,5 +1,6 @@
 package com.homss.server.controller;
 
+import com.homss.server.common.annotation.CurrentMemberId;
 import com.homss.server.dto.request.SocialLoginRequest;
 import com.homss.server.dto.response.SocialLoginResponse;
 import com.homss.server.service.AuthService;
@@ -22,5 +23,11 @@ public class AuthController {
     public ResponseEntity<SocialLoginResponse> login(@Valid @RequestBody SocialLoginRequest request) {
         SocialLoginResponse response = authService.login(request);
         return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@CurrentMemberId Long memberId) {
+        authService.logout(memberId);
+        return ResponseEntity.ok().build();
     }
 }
