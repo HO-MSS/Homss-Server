@@ -71,12 +71,12 @@ public class GlobalExceptionHandler {
         log.error(LOG_TEMPLATE,
                 "BadSqlGrammarException",
                 exception.getClass().getSimpleName(),
-                INTERNAL_SERVER_ERROR.getCode(),
+                DATABASE_ERROR.getCode(),
                 exception.getMessage(),
                 exception.getStackTrace()
         );
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR.getHttpStatus())
-                .body(ErrorResponse.of(INTERNAL_SERVER_ERROR.getCode(), INTERNAL_SERVER_ERROR.getMessage()));
+        return ResponseEntity.status(DATABASE_ERROR.getHttpStatus())
+                .body(ErrorResponse.of(DATABASE_ERROR.getCode(), DATABASE_ERROR.getMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)

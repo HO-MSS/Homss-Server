@@ -12,6 +12,7 @@ public enum ExceptionCode {
     INTERNAL_SERVER_ERROR("0000", HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 서버에러"),
     REQUEST_BODY_NOT_FOUND_ERROR("0001", HttpStatus.BAD_REQUEST, "요청의 Body가 없음"),
     REQUEST_ARGUMENT_NOT_VALID_ERROR("0002", HttpStatus.BAD_REQUEST, "요청에 필요한 필드가 없음 -> "),
+    DATABASE_ERROR("0003", HttpStatus.INTERNAL_SERVER_ERROR, "DB 에러"),
 
     /* 인증&인가 에러 (1000~) */
     EXPIRED_TOKEN_ERROR("1000", HttpStatus.BAD_REQUEST, "만료된 토큰"),
