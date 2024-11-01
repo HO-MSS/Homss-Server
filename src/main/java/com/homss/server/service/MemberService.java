@@ -1,6 +1,6 @@
 package com.homss.server.service;
 
-import com.homss.server.model.member.Member;
+import com.homss.server.dto.response.MemberNicknameDuplicateResponse;
 import com.homss.server.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,16 +12,10 @@ public class MemberService {
 
     private final MemberMapper memberMapper;
 
-    @Transactional
-    public Member saveMember() {
-        Member member = Member.of(1L, "tester", "profile");
-        memberMapper.save(member);
-        return memberMapper.findById(member.getMemberId());
-    }
-
     @Transactional(readOnly = true)
-    public Member findMemberById(Long memberId) {
-        return memberMapper.findById(memberId);
+    public MemberNicknameDuplicateResponse checkNicknameDuplicate(String nickname) {
+        boolean isDuplicate = memberMapper.checkNicknameDuplicate(nickname);
+        return new MemberNicknameDuplicateResponse(isDuplicate);
     }
 
 }

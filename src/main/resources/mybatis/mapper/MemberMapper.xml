@@ -30,7 +30,7 @@
         FROM member
     </select>
 
-    <select id="checkDuplicateNickname" resultType="boolean">
+    <select id="checkNicknameDuplicate" resultType="boolean">
         SELECT COUNT(*) > 0
         FROM member as m
         WHERE m.nickname = #{nickname}

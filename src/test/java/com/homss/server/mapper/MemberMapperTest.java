@@ -2,7 +2,6 @@ package com.homss.server.mapper;
 
 import com.homss.server.ServerApplicationTests;
 import com.homss.server.model.member.Member;
-import com.homss.server.model.member.MemberStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -83,13 +82,13 @@ public class MemberMapperTest extends ServerApplicationTests {
 
     @Test
     @DisplayName("사용자 닉네임 중복 확인")
-    void checkDuplicateNickname_test() {
+    void checkNicknameDuplicate_test() {
         //given
         String nickname = "member";
         memberMapper.save(Member.of(1L, nickname, "url"));
 
         //when
-        boolean isDuplicate = memberMapper.checkDuplicateNickname(nickname);
+        boolean isDuplicate = memberMapper.checkNicknameDuplicate(nickname);
 
         //then
         Assertions.assertThat(isDuplicate).isTrue();
