@@ -1,4 +1,8 @@
 package com.homss.server.dto.request;
 
-public record EditMemberProfileRequest(String nickname, String profileImage, String baekjoonId) {
+import jakarta.validation.constraints.NotNull;
+
+public record EditMemberProfileRequest(@NotNull String nickname,
+                                       @NotNull String profileImage,
+                                       @NotNull  String baekjoonId) {
 }
