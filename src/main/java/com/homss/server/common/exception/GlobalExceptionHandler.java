@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 
@@ -64,6 +65,19 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(REQUEST_BODY_NOT_FOUND_ERROR.getHttpStatus())
                 .body(ErrorResponse.of(REQUEST_BODY_NOT_FOUND_ERROR.getCode(), REQUEST_BODY_NOT_FOUND_ERROR.getMessage()));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException exception) {
+        log.error(LOG_TEMPLATE,
+                "NoResourceFoundException",
+                exception.getClass().getSimpleName(),
+                API_NOT_FOUND_ERROR.getCode(),
+                exception.getMessage(),
+                exception.getStackTrace()
+        );
+        return ResponseEntity.status(API_NOT_FOUND_ERROR.getHttpStatus())
+                .body(ErrorResponse.of(API_NOT_FOUND_ERROR.getCode(), API_NOT_FOUND_ERROR.getMessage()));
     }
 
     @ExceptionHandler(BadSqlGrammarException.class)
