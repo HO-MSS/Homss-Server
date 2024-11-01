@@ -15,4 +15,6 @@ public interface MemberMapper {
     Optional<Member> findById(Long id);
     boolean checkNicknameDuplicate(String nickname);
     void changeMemberProfile(Member member);
+
+    void changeMemberRefreshToken(Member member);
 }

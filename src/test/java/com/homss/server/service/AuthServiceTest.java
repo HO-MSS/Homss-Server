@@ -54,7 +54,7 @@ public class AuthServiceTest extends ServerApplicationTests {
         Long memberSocialId = 1L;
         SocialLoginRequest request = new SocialLoginRequest("SOCIAL_ACCESS_TOKEN");
 
-        when(kakaoClient.getMemberSocialId(any( String.class))).thenReturn(memberSocialId);
+        when(kakaoClient.getMemberSocialId(any(String.class))).thenReturn(memberSocialId);
 
         // when
         SocialLoginResponse response = authService.login(request);
@@ -64,5 +64,23 @@ public class AuthServiceTest extends ServerApplicationTests {
         Member member = memberMapper.findById(memberId).orElse(null);
         Assertions.assertThat(member).isNotNull();
         Assertions.assertThat(member.getSocialId()).isEqualTo(memberSocialId);
+        Assertions.assertThat(member.getRefreshToken()).isEqualTo(response.refreshToken());
+    }
+
+    @Test
+    @DisplayName("로그아웃")
+    void logout_test() {
+        // given
+        Member newMember = Member.create(1L);
+        memberMapper.save(newMember);
+        newMember.changeRefreshToken("RefreshToken");
+        memberMapper.changeMemberRefreshToken(newMember);
+
+        // when
+        authService.logout(newMember.getMemberId());
+
+        // then
+        Member member = memberMapper.findById(newMember.getMemberId()).orElse(null);
+        Assertions.assertThat(member.getRefreshToken()).isNull();
     }
 }

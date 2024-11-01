@@ -119,4 +119,21 @@ public class MemberMapperTest extends ServerApplicationTests {
         Assertions.assertThat(member.getMemberStatus()).isEqualTo(ACTIVE);
     }
 
+    @Test
+    @DisplayName("사용자 리프레쉬 토큰 변경")
+    void changeMemberRefreshToken_test() {
+        //given
+        String refreshToken = "refreshToken";
+        Member newMember = Member.create(1L);
+        memberMapper.save(newMember);
+
+        //when
+        newMember.changeRefreshToken(refreshToken);
+        memberMapper.changeMemberRefreshToken(newMember);
+
+        //then
+        Member member = memberMapper.findById(newMember.getMemberId()).orElse(null);
+        Assertions.assertThat(member.getRefreshToken()).isEqualTo(refreshToken);
+    }
+
 }
