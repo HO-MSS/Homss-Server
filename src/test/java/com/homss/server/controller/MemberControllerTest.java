@@ -1,6 +1,8 @@
 package com.homss.server.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homss.server.ServerApplicationTests;
+import com.homss.server.dto.request.EditMemberProfileRequest;
 import com.homss.server.dto.request.SocialLoginRequest;
 import com.homss.server.dto.response.SocialLoginResponse;
 import com.homss.server.mapper.MemberMapper;
@@ -29,6 +31,9 @@ public class MemberControllerTest extends ServerApplicationTests {
     @Autowired
     private MemberMapper memberMapper;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @AfterEach
     void clean() {
         memberMapper.deleteAll();
@@ -47,5 +52,23 @@ public class MemberControllerTest extends ServerApplicationTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isDuplicate").value(true));
+    }
+
+    @Test
+    @DisplayName("사용자 프로필 설정")
+    void edimtMemberProfile_test() throws Exception {
+        // given
+        String nickname = "nickname";
+        String profileImage = "profile";
+        String baekjoonId = "baek";
+        EditMemberProfileRequest request = new EditMemberProfileRequest(nickname, profileImage, baekjoonId);
+        Member newMember = Member.create(1L);
+        memberMapper.save(newMember);
+
+        // when & then
+        mockMvc.perform(post("/api/member/profile")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
     }
 }
