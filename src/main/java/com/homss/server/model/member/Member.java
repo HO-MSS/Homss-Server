@@ -20,6 +20,7 @@ public class Member extends TimeModel {
     private Integer solveCount;
     private Long score;
     private MemberStatus memberStatus;
+    private String refreshToken;
 
     public static Member of(Long socialId, String nickname, String profileImage) {
         return Member.builder()
@@ -49,6 +50,10 @@ public class Member extends TimeModel {
 
     public void changeMemberStatus(MemberStatus memberStatus) {
         this.memberStatus=memberStatus;
+    }
+
+    public void changeRefreshToken(String refreshToken) {
+        this.refreshToken=refreshToken;
     }
 
 }

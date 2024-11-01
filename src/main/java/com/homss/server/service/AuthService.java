@@ -24,6 +24,7 @@ public class AuthService {
         Long socialId = kakaoClient.getMemberSocialId(request.socialAccessToken());
         Member member = getMember(socialId);
         MemberJwtTokens memberJwtTokens = getMemberJwtTokens(member);
+        changeMemberRefreshToken(member, memberJwtTokens.refreshToken());
         return SocialLoginResponse.from(memberJwtTokens);
     }
 
@@ -40,6 +41,11 @@ public class AuthService {
         String accessToken = jwtProvider.createAccessToken(member.getMemberId());
         String refreshToken = jwtProvider.createRefreshToken(member.getMemberId());
         return new MemberJwtTokens(accessToken, refreshToken) ;
+    }
+
+    private void changeMemberRefreshToken(Member member, String refreshToken) {
+        member.changeRefreshToken(refreshToken);
+        memberMapper.changeMemberRefreshToken(member);
     }
 
 }
