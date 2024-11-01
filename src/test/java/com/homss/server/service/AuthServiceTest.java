@@ -61,7 +61,7 @@ public class AuthServiceTest extends ServerApplicationTests {
 
         // then
         Long memberId = jwtProvider.getMemberId(response.accessToken());
-        Member member = memberMapper.findById(memberId);
+        Member member = memberMapper.findById(memberId).orElse(null);
         Assertions.assertThat(member).isNotNull();
         Assertions.assertThat(member.getSocialId()).isEqualTo(memberSocialId);
     }

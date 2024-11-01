@@ -19,7 +19,11 @@ public enum ExceptionCode {
     EXPIRED_TOKEN_ERROR("1000", HttpStatus.BAD_REQUEST, "만료된 토큰"),
     INVALIDATE_TOKEN_ERROR("1001", HttpStatus.BAD_REQUEST, "잘못된 토큰"),
     ID_FILED_NOT_FOUND_ERROR("1002", HttpStatus.INTERNAL_SERVER_ERROR, "ID 필드를 찾지 못함"),
-    NO_AUTHORIZATION_TOKEN_ERROR("1003", HttpStatus.BAD_REQUEST, "인증 토큰이 존재하지 않음");
+    NO_AUTHORIZATION_TOKEN_ERROR("1003", HttpStatus.BAD_REQUEST, "인증 토큰이 존재하지 않음"),
+
+    /* Member 에러 (2000~) */
+    MEMBER_NOT_FOUND_ERROR("2000", HttpStatus.BAD_REQUEST, "존재하지 않는 사용자");
+
 
     private final String code;
     private final HttpStatus httpStatus;

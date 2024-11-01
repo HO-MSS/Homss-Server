@@ -112,7 +112,7 @@ public class MemberMapperTest extends ServerApplicationTests {
         memberMapper.changeMemberProfile(newMember);
 
         //then
-        Member member = memberMapper.findById(newMember.getMemberId());
+        Member member = memberMapper.findById(newMember.getMemberId()).orElse(null);
         Assertions.assertThat(member.getNickname()).isEqualTo(nickname);
         Assertions.assertThat(member.getProfileImage()).isEqualTo(profile);
         Assertions.assertThat(member.getBaekjoonId()).isEqualTo(baekjoonId);
