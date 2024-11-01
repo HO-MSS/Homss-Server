@@ -7,7 +7,6 @@ import com.homss.server.mapper.MemberMapper;
 import com.homss.server.model.member.Member;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,7 @@ public class MemberServiceTest extends ServerApplicationTests {
         memberService.editMemberProfile(newMember.getMemberId(), request);
 
         // then
-        Member member = memberMapper.findById(newMember.getMemberId());
+        Member member = memberMapper.findById(newMember.getMemberId()).orElse(null);
         assertThat(member.getNickname()).isEqualTo(nickname);
         assertThat(member.getProfileImage()).isEqualTo(profileImage);
         assertThat(member.getBaekjoonId()).isEqualTo(baekjoonId);

@@ -12,7 +12,7 @@ public interface MemberMapper {
     void deleteAll();
     List<Member> findAll();
     Optional<Member> findBySocialId(Long socialId);
-    Member findById(Long id);
+    Optional<Member> findById(Long id);
     boolean checkNicknameDuplicate(String nickname);
     void changeMemberProfile(Member member);
 }

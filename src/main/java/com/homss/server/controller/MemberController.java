@@ -1,8 +1,10 @@
 package com.homss.server.controller;
 
+import com.homss.server.common.annotation.CurrentMemberId;
 import com.homss.server.dto.request.EditMemberProfileRequest;
 import com.homss.server.dto.response.MemberNicknameDuplicateResponse;
 import com.homss.server.service.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +23,9 @@ public class MemberController {
     }
 
     @PostMapping("/profile")
-    public ResponseEntity<Void> editMemberProfile(//@CurrentMemberId Long memberId,
-                                                  @RequestBody EditMemberProfileRequest request) {
-        memberService.editMemberProfile(1L, request);
+    public ResponseEntity<Void> editMemberProfile(@CurrentMemberId Long memberId,
+                                                  @Valid @RequestBody EditMemberProfileRequest request) {
+        memberService.editMemberProfile(memberId, request);
         return ResponseEntity.ok().build();
     }
 
