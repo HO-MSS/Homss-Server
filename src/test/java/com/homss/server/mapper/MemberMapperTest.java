@@ -2,6 +2,7 @@ package com.homss.server.mapper;
 
 import com.homss.server.ServerApplicationTests;
 import com.homss.server.model.member.Member;
+import com.homss.server.model.member.MemberStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+
+import static com.homss.server.model.member.MemberStatus.ACTIVE;
 
 public class MemberMapperTest extends ServerApplicationTests {
 
@@ -76,6 +79,45 @@ public class MemberMapperTest extends ServerApplicationTests {
         //then
         Assertions.assertThat(member).isNotNull();
         Assertions.assertThat(member.getSocialId()).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("사용자 닉네임 중복 확인")
+    void checkDuplicateNickname_test() {
+        //given
+        String nickname = "member";
+        memberMapper.save(Member.of(1L, nickname, "url"));
+
+        //when
+        boolean isDuplicate = memberMapper.checkDuplicateNickname(nickname);
+
+        //then
+        Assertions.assertThat(isDuplicate).isTrue();
+    }
+
+    @Test
+    @DisplayName("사용자 기본정보 변경")
+    void changeMemberProfile_test() {
+        //given
+        String nickname = "nickname";
+        String profile = "profile";
+        String baekjoonId = "baekjoonId";
+        Member newMember = Member.create(1L);
+        memberMapper.save(newMember);
+
+        //when
+        newMember.changeNickname(nickname);
+        newMember.changeProfileImage(profile);
+        newMember.changeBaekjoonId(baekjoonId);
+        newMember.changeMemberStatus(ACTIVE);
+        memberMapper.changeMemberProfile(newMember);
+
+        //then
+        Member member = memberMapper.findById(newMember.getMemberId());
+        Assertions.assertThat(member.getNickname()).isEqualTo(nickname);
+        Assertions.assertThat(member.getProfileImage()).isEqualTo(profile);
+        Assertions.assertThat(member.getBaekjoonId()).isEqualTo(baekjoonId);
+        Assertions.assertThat(member.getMemberStatus()).isEqualTo(ACTIVE);
     }
 
 }

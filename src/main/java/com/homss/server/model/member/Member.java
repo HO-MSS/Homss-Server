@@ -16,6 +16,7 @@ public class Member extends TimeModel {
     private Long socialId;
     private String nickname;
     private String profileImage;
+    private String baekjoonId;
     private Integer solveCount;
     private Long score;
     private MemberStatus memberStatus;
@@ -33,4 +34,21 @@ public class Member extends TimeModel {
                 .socialId(socialId)
                 .build();
     }
+
+    public void changeNickname(String nickname) {
+        this.nickname=nickname;
+    }
+
+    public void changeProfileImage(String profileImage) {
+        this.profileImage=profileImage;
+    }
+
+    public void changeBaekjoonId(String baekjoonId) {
+        this.baekjoonId=baekjoonId;
+    }
+
+    public void changeMemberStatus(MemberStatus memberStatus) {
+        this.memberStatus=memberStatus;
+    }
+
 }
