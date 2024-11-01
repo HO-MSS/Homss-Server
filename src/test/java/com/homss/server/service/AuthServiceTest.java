@@ -8,6 +8,7 @@ import com.homss.server.dto.response.SocialLoginResponse;
 import com.homss.server.mapper.MemberMapper;
 import com.homss.server.model.member.Member;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -39,6 +40,11 @@ public class AuthServiceTest extends ServerApplicationTests {
 
     @Autowired
     private JwtProvider jwtProvider;
+
+    @AfterEach
+    void clean() {
+        memberMapper.deleteAll();
+    }
 
 
     @Test

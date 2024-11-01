@@ -24,7 +24,7 @@ public class AuthService {
         Long socialId = kakaoClient.getMemberSocialId(request.socialAccessToken());
         Member member = getMember(socialId);
         MemberJwtTokens memberJwtTokens = getMemberJwtTokens(member);
-        return SocialLoginResponse.of(memberJwtTokens);
+        return SocialLoginResponse.from(memberJwtTokens);
     }
 
     private Member getMember(Long socialId) {

@@ -14,21 +14,33 @@
     </delete>
 
     <select id="findById" resultType="member">
-        SELECT member_id, social_id, nickname, profile_image, solve_count, score, member_status, created_at, updated_at
+        SELECT member_id, social_id, nickname, profile_image, solve_count, score, baekjoon_id, member_status, created_at, updated_at
         FROM member
         WHERE member_id = #{id}
     </select>
 
     <select id="findBySocialId" resultType="member">
-        SELECT member_id, social_id, nickname, profile_image, solve_count, score, member_status, created_at, updated_at
+        SELECT member_id, social_id, nickname, profile_image, solve_count, score, baekjoon_id, member_status, created_at, updated_at
         FROM member as m
         WHERE m.social_id = #{socialId}
     </select>
 
     <select id="findAll" resultType="member">
-        SELECT member_id, social_id, nickname, profile_image, solve_count, score, member_status, created_at, updated_at
+        SELECT member_id, social_id, nickname, profile_image, solve_count, score, baekjoon_id, member_status, created_at, updated_at
         FROM member
     </select>
+
+    <select id="checkNicknameDuplicate" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM member as m
+        WHERE m.nickname = #{nickname}
+    </select>
+
+    <update id="changeMemberProfile">
+        UPDATE member
+        SET nickname = #{nickname}, profile_image = #{profileImage}, baekjoon_id = #{baekjoonId}, member_status = #{memberStatus}
+        WHERE member_id = #{memberId}
+    </update>
 
 
 

@@ -13,5 +13,6 @@ public interface MemberMapper {
     List<Member> findAll();
     Optional<Member> findBySocialId(Long socialId);
     Member findById(Long id);
-
+    boolean checkNicknameDuplicate(String nickname);
+    void changeMemberProfile(Member member);
 }
