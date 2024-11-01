@@ -17,7 +17,8 @@ public enum ExceptionCode {
     /* 인증&인가 에러 (1000~) */
     EXPIRED_TOKEN_ERROR("1000", HttpStatus.BAD_REQUEST, "만료된 토큰"),
     INVALIDATE_TOKEN_ERROR("1001", HttpStatus.BAD_REQUEST, "잘못된 토큰"),
-    ID_FILED_NOT_FOUND_ERROR("1002", HttpStatus.INTERNAL_SERVER_ERROR, "ID 필드를 찾지 못함");
+    ID_FILED_NOT_FOUND_ERROR("1002", HttpStatus.INTERNAL_SERVER_ERROR, "ID 필드를 찾지 못함"),
+    NO_AUTHORIZATION_TOKEN_ERROR("1003", HttpStatus.BAD_REQUEST, "인증 토큰이 존재하지 않음");
 
     private final String code;
     private final HttpStatus httpStatus;
