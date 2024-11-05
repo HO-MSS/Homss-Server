@@ -14,6 +14,7 @@ public enum ExceptionCode {
     REQUEST_ARGUMENT_NOT_VALID_ERROR("0002", HttpStatus.BAD_REQUEST, "요청에 필요한 필드가 없음 -> "),
     DATABASE_ERROR("0003", HttpStatus.INTERNAL_SERVER_ERROR, "DB 에러"),
     API_NOT_FOUND_ERROR("0004", HttpStatus.BAD_REQUEST, "존재하지 않는 API"),
+    INVALIDATE_ENUM_ERROR("0005", HttpStatus.BAD_REQUEST, "잘못된 Enum -> "),
 
     /* 인증&인가 에러 (1000~) */
     EXPIRED_TOKEN_ERROR("1000", HttpStatus.BAD_REQUEST, "만료된 토큰"),
