@@ -1,4 +1,4 @@
-package com.homss.server.model;
+package com.homss.server.model.board;
 
 import com.homss.server.common.modle.TimeModel;
 import lombok.AllArgsConstructor;

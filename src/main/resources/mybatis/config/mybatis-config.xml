@@ -7,8 +7,8 @@
     </settings>
 
     <typeAliases>
-        <typeAlias type="com.homss.server.model.Board" alias="board"/>
-        <typeAlias type="com.homss.server.model.BoardLike" alias="board_like"/>
+        <typeAlias type="com.homss.server.model.board.Board" alias="board"/>
+        <typeAlias type="com.homss.server.model.board.BoardLike" alias="board_like"/>
         <typeAlias type="com.homss.server.model.Comment" alias="comment"/>
         <typeAlias type="com.homss.server.model.CommentLike" alias="comment_like"/>
         <typeAlias type="com.homss.server.model.member.Member" alias="member"/>

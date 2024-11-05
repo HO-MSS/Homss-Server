@@ -1,0 +1,56 @@
+package com.homss.server.service;
+
+import com.homss.server.ServerApplicationTests;
+import com.homss.server.dto.request.BoardRequest;
+import com.homss.server.dto.response.BoardSaveResponse;
+import com.homss.server.mapper.BoardMapper;
+import com.homss.server.mapper.MemberMapper;
+import com.homss.server.model.board.Board;
+import com.homss.server.model.board.BoardType;
+import com.homss.server.model.member.Member;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class BoardServiceTest extends ServerApplicationTests {
+
+    @Autowired
+    private BoardService boardService;
+
+    @Autowired
+    private BoardMapper boardMapper;
+
+    @Autowired
+    private MemberMapper memberMapper;
+
+    @AfterEach
+    void clean() {
+        boardMapper.deleteAll();
+        memberMapper.deleteAll();
+    }
+
+    @Test
+    @DisplayName("게시글 등록")
+    void saveBoard_test() {
+        // given
+        BoardRequest request = new BoardRequest(BoardType.NOTICE, "title", "content");
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+
+        // when
+        BoardSaveResponse response = boardService.saveBoard(member.getMemberId(), request);
+
+        // then
+        List<Board> boards = boardMapper.findAll();
+        assertThat(boards.size()).isEqualTo(1);
+        assertThat(response.boardId()).isEqualTo(boards.get(0).getBoardId());
+
+    }
+
+}
