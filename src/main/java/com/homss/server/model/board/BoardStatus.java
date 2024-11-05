@@ -1,4 +1,4 @@
-package com.homss.server.model;
+package com.homss.server.model.board;
 
 public enum BoardStatus {
     ACTIVE,

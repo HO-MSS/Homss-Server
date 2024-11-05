@@ -63,6 +63,11 @@ public class GlobalExceptionHandler {
                 exception.getMessage(),
                 exception.getStackTrace()
         );
+        if (exception.getMessage().contains("Enum")) {
+            String enumInput = exception.getMessage().split("\"")[1];
+            return ResponseEntity.status(INVALIDATE_ENUM_ERROR.getHttpStatus())
+                    .body(ErrorResponse.of(INVALIDATE_ENUM_ERROR.getCode(), INVALIDATE_ENUM_ERROR.getMessage() + enumInput));
+        }
         return ResponseEntity.status(REQUEST_BODY_NOT_FOUND_ERROR.getHttpStatus())
                 .body(ErrorResponse.of(REQUEST_BODY_NOT_FOUND_ERROR.getCode(), REQUEST_BODY_NOT_FOUND_ERROR.getMessage()));
     }

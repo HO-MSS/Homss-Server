@@ -5,13 +5,17 @@
 <mapper namespace="com.homss.server.mapper.BoardMapper">
 
     <insert id="save" useGeneratedKeys="true" keyProperty="boardId">
-        INSERT INTO board (member_id, type, title, content)
-        VALUES (#{memberId}, #{type}, #{title}, #{content})
+        INSERT INTO board (member_id, board_type, title, content)
+        VALUES (#{memberId}, #{boardType}, #{title}, #{content})
     </insert>
 
     <select id="findAll" resultType="board">
-        SELECT board_id, member_id, content, board_type, title, board_status, created_at, updated_at
+        SELECT board_id, member_id, board_type, title, content, view_num, board_status, created_at, updated_at
         FROM board
     </select>
+
+    <delete id="deleteAll">
+        DELETE FROM board
+    </delete>
 
 </mapper>
