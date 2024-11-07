@@ -128,4 +128,22 @@ public class BoardMapperTest extends ServerApplicationTests {
         Assertions.assertThat(count).isEqualTo(COUNT);
     }
 
+    @Test
+    @DisplayName("게시글 모두 조회 시 타입이 없으면 모든 타입 게시글을 조회")
+    void findAllByType_WithoutType_test() {
+        // given
+        Member member1 = Member.create(1L);
+        Member member2 = Member.create(2L);
+        memberMapper.save(member1);
+        memberMapper.save(member2);
+        boardMapper.save(Board.of(member1.getMemberId(), BoardType.NOTICE, "title1", "content"));
+        boardMapper.save(Board.of(member2.getMemberId(), BoardType.QNA, "title2", "content"));
+
+        // when
+        List<BoardSimpleResponse> boards = boardMapper.findAllByType(null, 0L, 10);
+
+        // then
+        Assertions.assertThat(boards.size()).isEqualTo(2);
+    }
+
 }

@@ -39,6 +39,9 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	implementation 'com.nimbusds:nimbus-jose-jwt:9.30.2'
 
+	// Enum Warning
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	runtimeOnly 'com.h2database:h2'

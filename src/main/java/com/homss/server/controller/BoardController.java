@@ -27,7 +27,8 @@ public class BoardController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<BoardListResponse> findAllBoardWithType(@Valid @RequestParam("type") BoardType boardType, Pageable pageable) {
+    public ResponseEntity<BoardListResponse> findAllBoardWithType(@RequestParam(name = "type", required = false) BoardType boardType,
+                                                                  Pageable pageable) {
         BoardListResponse response = boardService.findAllBoardWithType(boardType, pageable);
         return ResponseEntity.ok().body(response);
     }
