@@ -74,4 +74,57 @@ public class BoardMapperTest extends ServerApplicationTests {
         Assertions.assertThat(boardMapper.findAll().size()).isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("게시글 타입에 따라 모두 조회")
+    void findAllByType_test() {
+        // given
+        Member member1 = Member.create(1L);
+        Member member2 = Member.create(2L);
+        memberMapper.save(member1);
+        memberMapper.save(member2);
+        boardMapper.save(Board.of(member1.getMemberId(), BoardType.NOTICE, "title1", "content"));
+        boardMapper.save(Board.of(member2.getMemberId(), BoardType.QNA, "title2", "content"));
+
+        // when
+        List<Board> boards = boardMapper.findAllByType(BoardType.NOTICE, 0L, 10);
+
+        // then
+        Assertions.assertThat(boards.size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("게시글 타입에 따라 모두 조회")
+    void findAllByType_Pageable_test() {
+        // given
+        for (int i=0; i<3; i++) {
+            Member member = Member.create((long) i);
+            memberMapper.save(member);
+            boardMapper.save(Board.of(member.getMemberId(), BoardType.NOTICE, "title" + i, "content"));
+        }
+
+        // when
+        List<Board> boards = boardMapper.findAllByType(BoardType.NOTICE, 0L, 2);
+
+        // then
+        Assertions.assertThat(boards.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("게시글 타입에 따라 게시글 수를 조회")
+    void countByType_test() {
+        // given
+        int COUNT = 3;
+        for (int i=0; i<COUNT; i++) {
+            Member member = Member.create((long) i);
+            memberMapper.save(member);
+            boardMapper.save(Board.of(member.getMemberId(), BoardType.NOTICE, "title" + i, "content"));
+        }
+
+        // when
+        Long count = boardMapper.countByType(BoardType.NOTICE);
+
+        // then
+        Assertions.assertThat(count).isEqualTo(COUNT);
+    }
+
 }

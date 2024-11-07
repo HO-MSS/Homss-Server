@@ -14,6 +14,30 @@
         FROM board
     </select>
 
+    <select id="findAllByType" resultType="board">
+        SELECT board_id, member_id, board_type, title, content, view_num, board_status, created_at, updated_at
+        FROM board as b
+        <if test="boardType != null">
+            WHERE b.board_type = #{boardType}
+        </if>
+        ORDER BY created_at DESC
+        <if test="pageSize != null">
+            LIMIT #{pageSize}
+        </if>
+        <if test="offset != null">
+            OFFSET #{offset}
+        </if>
+
+    </select>
+
+    <select id="countByType" resultType="long">
+        SELECT COUNT(*)
+        FROM board as b
+        <if test="boardType != null">
+            WHERE b.board_type = #{boardType}
+        </if>
+    </select>
+
     <delete id="deleteAll">
         DELETE FROM board
     </delete>
