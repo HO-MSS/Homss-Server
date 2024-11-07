@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
@@ -32,6 +33,21 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(exception.getHttpStatus())
                 .body(ErrorResponse.of(exception.getErrorCode(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
+        log.error(LOG_TEMPLATE,
+                "MethodArgumentTypeMismatchException",
+                exception.getClass().getSimpleName(),
+                REQUEST_BODY_NOT_FOUND_ERROR.getCode(),
+                exception.getMessage(),
+                exception.getStackTrace()
+        );
+        String enumInput = exception.getMessage().split("for value \\[")[1].split("]")[0];
+        return ResponseEntity.status(INVALIDATE_ENUM_ERROR.getHttpStatus())
+                .body(ErrorResponse.of(INVALIDATE_ENUM_ERROR.getCode(), INVALIDATE_ENUM_ERROR.getMessage() + enumInput));
+
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

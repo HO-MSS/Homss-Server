@@ -1,6 +1,7 @@
 package com.homss.server.mapper;
 
 import com.homss.server.ServerApplicationTests;
+import com.homss.server.dto.response.BoardSimpleResponse;
 import com.homss.server.model.board.Board;
 import com.homss.server.model.board.BoardType;
 import com.homss.server.model.member.Member;
@@ -86,7 +87,7 @@ public class BoardMapperTest extends ServerApplicationTests {
         boardMapper.save(Board.of(member2.getMemberId(), BoardType.QNA, "title2", "content"));
 
         // when
-        List<Board> boards = boardMapper.findAllByType(BoardType.NOTICE, 0L, 10);
+        List<BoardSimpleResponse> boards = boardMapper.findAllByType(BoardType.NOTICE, 0L, 10);
 
         // then
         Assertions.assertThat(boards.size()).isEqualTo(1);
@@ -103,7 +104,7 @@ public class BoardMapperTest extends ServerApplicationTests {
         }
 
         // when
-        List<Board> boards = boardMapper.findAllByType(BoardType.NOTICE, 0L, 2);
+        List<BoardSimpleResponse> boards = boardMapper.findAllByType(BoardType.NOTICE, 0L, 2);
 
         // then
         Assertions.assertThat(boards.size()).isEqualTo(2);

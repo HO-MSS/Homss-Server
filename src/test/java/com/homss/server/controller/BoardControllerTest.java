@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -75,4 +76,39 @@ public class BoardControllerTest extends ServerApplicationTests {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @DisplayName("게시물 모두 조회 with Type")
+    void findAllBoardWithType_test() throws Exception {
+        // given
+        BoardType boardType = BoardType.NOTICE;
+        int size = 10;
+        int page = 0;
+
+        // when & then
+        mockMvc.perform(get("/api/board/all")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("type", boardType.toString())
+                        .param("size", Integer.toString(size))
+                        .param("page", Integer.toString(page)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("게시물 모두 조회 시 없는 Enum일 경우")
+    void findAllBoardWithType_enum_test() throws Exception {
+        // given
+        String inValidEnum = "ENUM";
+        int size = 10;
+        int page = 0;
+
+        // when & then
+        mockMvc.perform(get("/api/board/all")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("type", inValidEnum)
+                        .param("size", Integer.toString(size))
+                        .param("page", Integer.toString(page)))
+                .andExpect(status().is4xxClientError());
+    }
+
 }
