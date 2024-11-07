@@ -25,7 +25,10 @@ public class SecurityConfig {
 
     private static final String[] PERMIT_URLS = {
             // login
-            "/api/auth/login"
+            "/api/auth/login",
+
+            // board
+            "/api/board/all"
     } ;
 
     @Bean
