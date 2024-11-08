@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS comment (
      comment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
      board_id BIGINT NOT NULL,
      member_id BIGINT NOT NULL,
-     parent_id BIGINT NOT NULL,
+     parent_id BIGINT,
      content VARCHAR(255) NOT NULL,
      comment_status VARCHAR(20) DEFAULT 'ACTIVE' NOT NULL,
      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,

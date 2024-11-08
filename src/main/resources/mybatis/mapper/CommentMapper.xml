@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.homss.server.mapper.CommentMapper">
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="commentId">
+        INSERT INTO comment (member_id, board_id, parent_id, content)
+        VALUES (#{memberId}, #{boardId}, #{parentId}, #{content})
+    </insert>
+
+    <!--    deleteAll-->
+    <delete id="deleteAll">
+        DELETE FROM comment
+    </delete>
+
+    <!--    findAll-->
+    <select id="findAll" resultType="board">
+        SELECT c.*
+        FROM comment as c
+    </select>
+
+</mapper>
