@@ -17,19 +17,8 @@
     </select>
 
 <!--    findAllByType-->
-    <resultMap id="BoardSimpleResponse" type="com.homss.server.dto.response.BoardSimpleResponse">
-        <id property="boardId" column="board_id"/>
-        <result property="title" column="title"/>
-        <result property="viewNum" column="view_num"/>
-        <result property="boardType" column="board_type"/>
-        <result property="memberId" column="member_id"/>
-        <result property="memberNickname" column="nickname"/>
-        <result property="memberProfileImage" column="profile_image"/>
-        <result property="likeNum" column="bln"/>
-        <result property="commentNum" column="cn"/>
-    </resultMap>
 
-    <select id="findAllByType" resultMap="BoardSimpleResponse" resultType="HashMap">
+    <select id="findAllByType" resultMap="mybatis.mapper.resultMap.BoardResultMap.BoardSimpleResponse" resultType="HashMap">
         SELECT b.*, m.*, COUNT(bl.board_like_id) as bln, COUNT(c.comment_id) as cn
         FROM board as b LEFT JOIN member as m ON b.member_id = m.member_id
         LEFT JOIN board_like as bl ON b.board_id = bl.board_id
@@ -45,7 +34,6 @@
         <if test="offset != null">
             OFFSET #{offset}
         </if>
-
     </select>
 
 <!--    countByType-->
@@ -61,5 +49,22 @@
     <delete id="deleteAll">
         DELETE FROM board
     </delete>
+
+
+    <update id="increaseViewNum">
+        UPDATE board
+        SET view_num = view_num+1
+        WHERE board_id = #{boardId}
+    </update>
+
+
+    <select id="findDetailById" resultMap="mybatis.mapper.resultMap.BoardResultMap.BoardDetailResponse" resultType="HashMap">
+        SELECT b.*, m.*, COUNT(bl.board_like_id) as ln,
+        CASE WHEN SUM(CASE WHEN bl.member_id = #{memberId} THEN 1 ELSE 0 END) > 0 THEN TRUE ELSE FALSE END AS ls
+        FROM board as b LEFT JOIN member as m ON b.member_id = m.member_id
+        LEFT JOIN board_like as bl ON b.board_id = bl.board_id
+        WHERE b.board_id = #{boardId}
+        GROUP BY b.board_id
+    </select>
 
 </mapper>

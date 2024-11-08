@@ -3,6 +3,7 @@ package com.homss.server.service;
 import com.homss.server.common.exception.ApplicationException;
 import com.homss.server.common.utils.PageConverter;
 import com.homss.server.dto.request.BoardRequest;
+import com.homss.server.dto.response.BoardDetailResponse;
 import com.homss.server.dto.response.BoardListResponse;
 import com.homss.server.dto.response.BoardSaveResponse;
 import com.homss.server.dto.response.BoardSimpleResponse;
@@ -47,5 +48,11 @@ public class BoardService {
         Page<BoardSimpleResponse> boardPage = boardPageConverter.toPage(boards, boardCount, pageable);
 
         return BoardListResponse.from(boardPage);
+    }
+
+    @Transactional
+    public BoardDetailResponse findById(Long memberId, Long boardId) {
+        boardMapper.increaseViewNum(boardId);
+        return boardMapper.findDetailById(memberId, boardId);
     }
 }

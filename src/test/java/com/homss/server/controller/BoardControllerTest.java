@@ -1,16 +1,14 @@
 package com.homss.server.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homss.server.ServerApplicationTests;
 import com.homss.server.common.jwt.JwtProvider;
 import com.homss.server.dto.request.BoardRequest;
-import com.homss.server.dto.request.EditMemberProfileRequest;
 import com.homss.server.mapper.BoardMapper;
 import com.homss.server.mapper.MemberMapper;
+import com.homss.server.model.board.Board;
 import com.homss.server.model.board.BoardType;
 import com.homss.server.model.member.Member;
-import com.homss.server.service.BoardService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -109,6 +107,27 @@ public class BoardControllerTest extends ServerApplicationTests {
                         .param("size", Integer.toString(size))
                         .param("page", Integer.toString(page)))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("게시물 상제 조회")
+    void findBoardDetail_test() throws Exception {
+        // given
+        String title = "title";
+        String content = "content";
+        BoardType boardType = BoardType.NOTICE;
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), boardType, title, content);
+        boardMapper.save(board);
+
+        // when & then
+        mockMvc.perform(get("/api/board/"+board.getBoardId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", ACCESS_TOKEN)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.boardId").value(board.getBoardId()));;
     }
 
 }

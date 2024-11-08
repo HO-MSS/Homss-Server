@@ -1,6 +1,7 @@
 package com.homss.server.mapper;
 
 import com.homss.server.ServerApplicationTests;
+import com.homss.server.dto.response.BoardDetailResponse;
 import com.homss.server.dto.response.BoardSimpleResponse;
 import com.homss.server.model.board.Board;
 import com.homss.server.model.board.BoardType;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BoardMapperTest extends ServerApplicationTests {
 
@@ -40,7 +43,7 @@ public class BoardMapperTest extends ServerApplicationTests {
         boardMapper.save(board);
 
         // then
-        Assertions.assertThat(boardMapper.findAll().size()).isEqualTo(1);
+        assertThat(boardMapper.findAll().size()).isEqualTo(1);
     }
 
     @Test
@@ -56,7 +59,7 @@ public class BoardMapperTest extends ServerApplicationTests {
         List<Board> boards = boardMapper.findAll();
 
         // then
-        Assertions.assertThat(boards.size()).isEqualTo(2);
+        assertThat(boards.size()).isEqualTo(2);
     }
 
     @Test
@@ -72,7 +75,7 @@ public class BoardMapperTest extends ServerApplicationTests {
         boardMapper.deleteAll();
 
         // then
-        Assertions.assertThat(boardMapper.findAll().size()).isEqualTo(0);
+        assertThat(boardMapper.findAll().size()).isEqualTo(0);
     }
 
     @Test
@@ -90,7 +93,7 @@ public class BoardMapperTest extends ServerApplicationTests {
         List<BoardSimpleResponse> boards = boardMapper.findAllByType(BoardType.NOTICE, 0L, 10);
 
         // then
-        Assertions.assertThat(boards.size()).isEqualTo(1);
+        assertThat(boards.size()).isEqualTo(1);
     }
 
     @Test
@@ -107,7 +110,7 @@ public class BoardMapperTest extends ServerApplicationTests {
         List<BoardSimpleResponse> boards = boardMapper.findAllByType(BoardType.NOTICE, 0L, 2);
 
         // then
-        Assertions.assertThat(boards.size()).isEqualTo(2);
+        assertThat(boards.size()).isEqualTo(2);
     }
 
     @Test
@@ -125,7 +128,7 @@ public class BoardMapperTest extends ServerApplicationTests {
         Long count = boardMapper.countByType(BoardType.NOTICE);
 
         // then
-        Assertions.assertThat(count).isEqualTo(COUNT);
+        assertThat(count).isEqualTo(COUNT);
     }
 
     @Test
@@ -143,7 +146,32 @@ public class BoardMapperTest extends ServerApplicationTests {
         List<BoardSimpleResponse> boards = boardMapper.findAllByType(null, 0L, 10);
 
         // then
-        Assertions.assertThat(boards.size()).isEqualTo(2);
+        assertThat(boards.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("게시글 상세조회")
+    void findDetailById_test() {
+        // given
+        String title = "title";
+        String content = "content";
+        BoardType boardType = BoardType.NOTICE;
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), boardType, title, content);
+        boardMapper.save(board);
+
+        // when
+        BoardDetailResponse boardDetail = boardMapper.findDetailById(null, board.getBoardId());
+
+        // then
+        assertThat(boardDetail.getBoardId()).isEqualTo(board.getBoardId());
+        assertThat(boardDetail.getTitle()).isEqualTo(title);
+        assertThat(boardDetail.getContent()).isEqualTo(content);
+        assertThat(boardDetail.getBoardType()).isEqualTo(boardType);
+        assertThat(boardDetail.getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(boardDetail.getMemberNickname()).isEqualTo(member.getNickname());
+
     }
 
 }

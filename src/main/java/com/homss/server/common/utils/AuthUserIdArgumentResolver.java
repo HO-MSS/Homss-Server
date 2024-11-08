@@ -27,7 +27,7 @@ public class AuthUserIdArgumentResolver implements HandlerMethodArgumentResolver
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
+        if (authentication != null && !authentication.getName().equals("anonymousUser")) {
             return Long.parseLong(authentication.getName());
         }
         return null;

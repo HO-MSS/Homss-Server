@@ -2,6 +2,7 @@ package com.homss.server.service;
 
 import com.homss.server.ServerApplicationTests;
 import com.homss.server.dto.request.BoardRequest;
+import com.homss.server.dto.response.BoardDetailResponse;
 import com.homss.server.dto.response.BoardListResponse;
 import com.homss.server.dto.response.BoardSaveResponse;
 import com.homss.server.dto.response.BoardSimpleResponse;
@@ -97,6 +98,27 @@ public class BoardServiceTest extends ServerApplicationTests {
         assertThat(response.content().size()).isEqualTo(2);
         assertThat(response.pageNumber()).isEqualTo(0);
         assertThat(response.hasNext()).isTrue();
+
+    }
+
+    @Test
+    @DisplayName("게시글 상세 조회")
+    void findById_test() {
+        // given
+        String title = "title";
+        String content = "content";
+        BoardType boardType = BoardType.NOTICE;
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), boardType, title, content);
+        boardMapper.save(board);
+
+        // when
+        BoardDetailResponse boardDetail = boardService.findById(null, board.getBoardId());
+
+        // then
+        assertThat(boardDetail.getBoardId()).isEqualTo(board.getBoardId());
+        assertThat(boardDetail.getViewNum()).isEqualTo(1);
 
     }
 
