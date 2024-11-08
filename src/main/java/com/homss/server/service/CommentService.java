@@ -1,6 +1,7 @@
 package com.homss.server.service;
 
 import com.homss.server.common.exception.ApplicationException;
+import com.homss.server.dto.request.CommentEditRequest;
 import com.homss.server.dto.request.CommentRequest;
 import com.homss.server.mapper.CommentMapper;
 import com.homss.server.model.comment.Comment;
@@ -34,5 +35,17 @@ public class CommentService {
         }
 
         commentMapper.changeStatus(commentId, CommentStatus.DELETED);
+    }
+
+    @Transactional
+    public void editComment(Long memberId, Long commentId, CommentEditRequest request) {
+        Comment comment = commentMapper.findById(commentId)
+                .orElseThrow(() -> ApplicationException.create(COMMENT_NOT_FOUND_ERROR));
+
+        if (!comment.getMemberId().equals(memberId)) {
+            throw ApplicationException.create(NOT_COMMENT_AUTHOR_ERROR);
+        }
+
+        commentMapper.edit(commentId, request.content());
     }
 }

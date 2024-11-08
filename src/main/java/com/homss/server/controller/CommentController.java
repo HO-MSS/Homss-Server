@@ -1,6 +1,7 @@
 package com.homss.server.controller;
 
 import com.homss.server.common.annotation.CurrentMemberId;
+import com.homss.server.dto.request.CommentEditRequest;
 import com.homss.server.dto.request.CommentRequest;
 import com.homss.server.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,14 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> saveComment(@CurrentMemberId Long memberId, @PathVariable Long commentId) {
         commentService.deleteComment(memberId, commentId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{commentId}")
+    public ResponseEntity<Void> editComment(@CurrentMemberId Long memberId,
+                                            @PathVariable Long commentId,
+                                            @RequestBody CommentEditRequest request) {
+        commentService.editComment(memberId, commentId, request);
         return ResponseEntity.ok().build();
     }
 

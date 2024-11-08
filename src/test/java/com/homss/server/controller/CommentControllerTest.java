@@ -3,6 +3,7 @@ package com.homss.server.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homss.server.ServerApplicationTests;
 import com.homss.server.common.jwt.JwtProvider;
+import com.homss.server.dto.request.CommentEditRequest;
 import com.homss.server.dto.request.CommentRequest;
 import com.homss.server.mapper.BoardMapper;
 import com.homss.server.mapper.CommentMapper;
@@ -22,8 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -97,6 +97,31 @@ public class CommentControllerTest extends ServerApplicationTests {
         mockMvc.perform(delete("/api/comment/{commentId}", newComment.getCommentId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", ACCESS_TOKEN))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("댓글 수정")
+    void editComment_test() throws Exception {
+        // given
+        String nickname = "nickname";
+        Member member = Member.of(1L, nickname, "profile");
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content");
+        boardMapper.save(board);
+        Comment newComment = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        commentMapper.save(newComment);
+
+        CommentEditRequest request = new CommentEditRequest("edit content");
+
+        when(jwtProvider.validateToken(any(String.class))).thenReturn(true);
+        when(jwtProvider.getMemberId(any(String.class))).thenReturn(member.getMemberId());
+
+        // when & then
+        mockMvc.perform(put("/api/comment/{commentId}", newComment.getCommentId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", ACCESS_TOKEN)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
     }
 
