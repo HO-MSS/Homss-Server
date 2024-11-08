@@ -15,7 +15,8 @@ public class CommentService {
 
     @Transactional
     public void saveComment(Long memberId, Long boardId, CommentRequest request) {
-        Comment newComment = Comment.of(memberId, boardId, request.content(), null);
+        Comment newComment = Comment.of(memberId, boardId, request.content(), request.parentId());
         commentMapper.save(newComment);
     }
+
 }

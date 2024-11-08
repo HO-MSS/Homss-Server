@@ -61,7 +61,7 @@ public class CommentControllerTest extends ServerApplicationTests {
         Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content");
         memberMapper.save(member);
         boardMapper.save(board);
-        CommentRequest request = new CommentRequest("content");
+        CommentRequest request = new CommentRequest("content", null);
 
         when(jwtProvider.validateToken(any(String.class))).thenReturn(true);
         when(jwtProvider.getMemberId(any(String.class))).thenReturn(member.getMemberId());

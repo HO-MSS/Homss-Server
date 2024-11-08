@@ -21,4 +21,5 @@ public class CommentController {
         commentService.saveComment(memberId, boardId, request);
         return ResponseEntity.ok().build();
     }
+
 }

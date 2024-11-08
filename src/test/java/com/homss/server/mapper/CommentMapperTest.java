@@ -16,6 +16,7 @@ import java.util.List;
 
 import static com.homss.server.model.member.MemberStatus.ACTIVE;
 import static com.homss.server.model.member.MemberStatus.DELETED;
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CommentMapperTest extends ServerApplicationTests {
@@ -52,6 +53,27 @@ public class CommentMapperTest extends ServerApplicationTests {
 
         //then
         assertThat(commentMapper.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("상위 댓글과 함께 댓글 저장")
+    void save_with_parent_test() {
+        //given
+        Member member = Member.of(1L, "member", "url");
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+        Comment parentComment = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        commentMapper.save(parentComment);
+        Comment newComment = Comment.of(member.getMemberId(), board.getBoardId(), "content", parentComment.getCommentId());
+
+        //when
+        commentMapper.save(newComment);
+
+        //then
+        Comment comment = commentMapper.findById(newComment.getCommentId()).orElse(null);
+        assertThat(comment).isNotNull();
+        assertThat(comment.getParentId()).isEqualTo(parentComment.getCommentId());
     }
 
     @Test

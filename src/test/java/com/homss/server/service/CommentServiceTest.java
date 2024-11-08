@@ -46,7 +46,7 @@ public class CommentServiceTest extends ServerApplicationTests {
         Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
         boardMapper.save(board);
         String content = "content";
-        CommentRequest request = new CommentRequest(content);
+        CommentRequest request = new CommentRequest(content, null);
 
         //when
         commentService.saveComment(member.getMemberId(), board.getBoardId(), request);
