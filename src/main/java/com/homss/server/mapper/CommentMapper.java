@@ -15,4 +15,6 @@ public interface CommentMapper {
     Optional<Comment> findById(Long commentId);
 
     void changeStatus(Long commentId, CommentStatus commentStatus);
+
+    void edit(Long commentId, String content);
 }

@@ -32,4 +32,10 @@
         WHERE comment_id = #{commentId}
     </update>
 
+    <update id="edit">
+        UPDATE comment
+        SET content = #{content}, comment_status = 'EDITED'
+        WHERE comment_id = #{commentId}
+    </update>
+
 </mapper>

@@ -2,6 +2,7 @@ package com.homss.server.service;
 
 import com.homss.server.ServerApplicationTests;
 import com.homss.server.common.exception.ApplicationException;
+import com.homss.server.dto.request.CommentEditRequest;
 import com.homss.server.dto.request.CommentRequest;
 import com.homss.server.mapper.BoardMapper;
 import com.homss.server.mapper.CommentMapper;
@@ -97,6 +98,52 @@ public class CommentServiceTest extends ServerApplicationTests {
 
         //when & then
         assertThatThrownBy(() -> commentService.deleteComment(member2.getMemberId(), newComment.getCommentId()))
+                .isInstanceOf(ApplicationException.class)
+                .hasMessageContaining(NOT_COMMENT_AUTHOR_ERROR.getMessage());
+    }
+
+    @Test
+    @DisplayName("댓글 수정")
+    void editComment_test() {
+        Member member = Member.of(1L, "member", "url");
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+        Comment newComment = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        commentMapper.save(newComment);
+
+        CommentStatus status = CommentStatus.EDITED;
+        String content = "edit content";
+        CommentEditRequest request = new CommentEditRequest(content);
+
+        //when
+        commentService.editComment(member.getMemberId(), newComment.getCommentId(), request);
+
+        //then
+        Comment comment = commentMapper.findById(newComment.getCommentId()).orElse(null);
+
+        assertThat(comment).isNotNull();
+        assertThat(comment.getContent()).isEqualTo(content);
+        assertThat(comment.getCommentStatus()).isEqualTo(status);
+    }
+
+    @Test
+    @DisplayName("댓글 수정 시 작성자가 일치하지 않으면 예외")
+    void editComment_author_exception_test() {
+        Member member1 = Member.of(1L, "member", "url");
+        Member member2 = Member.of(1L, "member", "url");
+        memberMapper.save(member1);
+        memberMapper.save(member2);
+        Board board = Board.of(member1.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+        Comment newComment = Comment.of(member1.getMemberId(), board.getBoardId(), "content", null);
+        commentMapper.save(newComment);
+
+        String content = "edit content";
+        CommentEditRequest request = new CommentEditRequest(content);
+
+        //when & then
+        assertThatThrownBy(() -> commentService.editComment(member2.getMemberId(), newComment.getCommentId(), request))
                 .isInstanceOf(ApplicationException.class)
                 .hasMessageContaining(NOT_COMMENT_AUTHOR_ERROR.getMessage());
     }

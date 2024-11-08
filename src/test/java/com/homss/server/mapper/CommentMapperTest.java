@@ -133,5 +133,29 @@ public class CommentMapperTest extends ServerApplicationTests {
         assertThat(comment.getCommentStatus()).isEqualTo(status);
     }
 
+    @Test
+    @DisplayName("댓글 수정")
+    void edit_test() {
+        //given
+        Member member = Member.of(1L, "member", "url");
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+        Comment newComment = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        commentMapper.save(newComment);
+
+        CommentStatus status = CommentStatus.EDITED;
+        String editContent = "edit";
+
+        //when
+        commentMapper.edit(newComment.getCommentId(), editContent);
+
+        //then
+        Comment comment = commentMapper.findById(newComment.getCommentId()).orElse(null);
+
+        assertThat(comment).isNotNull();
+        assertThat(comment.getContent()).isEqualTo(editContent);
+        assertThat(comment.getCommentStatus()).isEqualTo(status);
+    }
 
 }
