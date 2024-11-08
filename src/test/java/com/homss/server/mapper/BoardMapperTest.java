@@ -6,7 +6,6 @@ import com.homss.server.dto.response.BoardSimpleResponse;
 import com.homss.server.model.board.Board;
 import com.homss.server.model.board.BoardType;
 import com.homss.server.model.member.Member;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
