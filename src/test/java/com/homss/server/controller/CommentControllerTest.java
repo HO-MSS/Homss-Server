@@ -20,9 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -58,8 +56,8 @@ public class CommentControllerTest extends ServerApplicationTests {
         // given
         String nickname = "nickname";
         Member member = Member.of(1L, nickname, "profile");
-        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content");
         memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content");
         boardMapper.save(board);
         CommentRequest request = new CommentRequest("content", null);
 
