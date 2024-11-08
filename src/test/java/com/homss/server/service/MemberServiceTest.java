@@ -2,10 +2,9 @@ package com.homss.server.service;
 
 import com.homss.server.ServerApplicationTests;
 import com.homss.server.dto.request.EditMemberProfileRequest;
-import com.homss.server.dto.response.MemberNicknameDuplicateResponse;
+import com.homss.server.dto.response.MemberNicknameAvailability;
 import com.homss.server.mapper.MemberMapper;
 import com.homss.server.model.member.Member;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,10 +34,10 @@ public class MemberServiceTest extends ServerApplicationTests {
         memberMapper.save(Member.of(1L, "nickname", "image"));
 
         // when
-        MemberNicknameDuplicateResponse response = memberService.checkNicknameDuplicate("nickname");
+        MemberNicknameAvailability response = memberService.checkNicknameAvailability("nickname");
 
         // then
-        assertThat(response.isDuplicate()).isTrue();
+        assertThat(response.isAvailable()).isTrue();
     }
 
     @Test

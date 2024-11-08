@@ -58,11 +58,11 @@ public class MemberControllerTest extends ServerApplicationTests {
         when(jwtProvider.getMemberId(any(String.class))).thenReturn(newMember.getMemberId());
 
         // when & then
-        mockMvc.perform(get("/api/member/duplicate/{nickname}", nickname)
+        mockMvc.perform(get("/api/member/availability/{nickname}", nickname)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", ACCESS_TOKEN))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isDuplicate").value(true));
+                .andExpect(jsonPath("$.isAvailable").value(true));
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.homss.server.controller;
 
 import com.homss.server.common.annotation.CurrentMemberId;
 import com.homss.server.dto.request.EditMemberProfileRequest;
-import com.homss.server.dto.response.MemberNicknameDuplicateResponse;
+import com.homss.server.dto.response.MemberNicknameAvailability;
 import com.homss.server.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +16,9 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/duplicate/{nickname}")
-    public ResponseEntity<MemberNicknameDuplicateResponse> checkNicknameDuplicate(@PathVariable String nickname) {
-        MemberNicknameDuplicateResponse response = memberService.checkNicknameDuplicate(nickname);
+    @GetMapping("/availability/{nickname}")
+    public ResponseEntity<MemberNicknameAvailability> checkNicknameAvailability(@PathVariable String nickname) {
+        MemberNicknameAvailability response = memberService.checkNicknameAvailability(nickname);
         return ResponseEntity.ok().body(response);
     }
 
