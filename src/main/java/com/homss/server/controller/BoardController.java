@@ -30,8 +30,9 @@ public class BoardController {
 
     @GetMapping("/all")
     public ResponseEntity<BoardListResponse> findAllBoardWithType(@RequestParam(name = "type", required = false) BoardType boardType,
+                                                                  @RequestParam(name = "keyword", required = false) String keyword,
                                                                   Pageable pageable) {
-        BoardListResponse response = boardService.findAllBoardWithType(boardType, pageable);
+        BoardListResponse response = boardService.findAllBoardWithType(boardType, keyword, pageable);
         return ResponseEntity.ok().body(response);
     }
 
@@ -40,4 +41,5 @@ public class BoardController {
         BoardDetailResponse response = boardService.findById(memberId, boardId);
         return ResponseEntity.ok().body(response);
     }
+
 }

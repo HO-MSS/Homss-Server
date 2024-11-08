@@ -90,7 +90,7 @@ public class BoardMapperTest extends ServerApplicationTests {
         boardMapper.save(Board.of(member2.getMemberId(), BoardType.QNA, "title2", "content"));
 
         // when
-        List<BoardSimpleResponse> boards = boardMapper.findAllByType(BoardType.NOTICE, 0L, 10);
+        List<BoardSimpleResponse> boards = boardMapper.findAllByType(BoardType.NOTICE, null, 0L, 10);
 
         // then
         assertThat(boards.size()).isEqualTo(1);
@@ -107,7 +107,7 @@ public class BoardMapperTest extends ServerApplicationTests {
         }
 
         // when
-        List<BoardSimpleResponse> boards = boardMapper.findAllByType(BoardType.NOTICE, 0L, 2);
+        List<BoardSimpleResponse> boards = boardMapper.findAllByType(BoardType.NOTICE, null, 0L, 2);
 
         // then
         assertThat(boards.size()).isEqualTo(2);
@@ -125,7 +125,7 @@ public class BoardMapperTest extends ServerApplicationTests {
         }
 
         // when
-        Long count = boardMapper.countByType(BoardType.NOTICE);
+        Long count = boardMapper.countByType(BoardType.NOTICE, null);
 
         // then
         assertThat(count).isEqualTo(COUNT);
@@ -143,7 +143,7 @@ public class BoardMapperTest extends ServerApplicationTests {
         boardMapper.save(Board.of(member2.getMemberId(), BoardType.QNA, "title2", "content"));
 
         // when
-        List<BoardSimpleResponse> boards = boardMapper.findAllByType(null, 0L, 10);
+        List<BoardSimpleResponse> boards = boardMapper.findAllByType(null, null, 0L, 10);
 
         // then
         assertThat(boards.size()).isEqualTo(2);
@@ -172,6 +172,29 @@ public class BoardMapperTest extends ServerApplicationTests {
         assertThat(boardDetail.getMemberId()).isEqualTo(member.getMemberId());
         assertThat(boardDetail.getMemberNickname()).isEqualTo(member.getNickname());
 
+    }
+
+    @Test
+    @DisplayName("게시글 검색어 조회")
+    void findAll_WithKeyword_test() {
+        // given
+        String keyword = "title";
+        Member member1 = Member.create(1L);
+        Member member2 = Member.create(2L);
+        memberMapper.save(member1);
+        memberMapper.save(member2);
+        boardMapper.save(Board.of(member1.getMemberId(), BoardType.NOTICE, "title1", "content"));
+        boardMapper.save(Board.of(member2.getMemberId(), BoardType.NOTICE, "Yes title1", "content"));
+        boardMapper.save(Board.of(member2.getMemberId(), BoardType.QNA, "Yes title", "content"));
+        boardMapper.save(Board.of(member2.getMemberId(), BoardType.QNA, "Yes", "content"));
+
+        // when
+        List<BoardSimpleResponse> allBoards = boardMapper.findAllByType(null, keyword, 0L, 10);
+        List<BoardSimpleResponse> noticeBoards = boardMapper.findAllByType(BoardType.NOTICE, keyword, 0L, 10);
+
+        // then
+        assertThat(allBoards.size()).isEqualTo(3);
+        assertThat(noticeBoards.size()).isEqualTo(2);
     }
 
 }

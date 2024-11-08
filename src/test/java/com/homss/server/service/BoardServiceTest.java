@@ -71,7 +71,7 @@ public class BoardServiceTest extends ServerApplicationTests {
         PageRequest pageable = PageRequest.of(0, 2);
 
         // when
-        BoardListResponse response = boardService.findAllBoardWithType(boardType, pageable);
+        BoardListResponse response = boardService.findAllBoardWithType(boardType, null, pageable);
 
         // then
         assertThat(response.content().size()).isEqualTo(1);
@@ -92,7 +92,7 @@ public class BoardServiceTest extends ServerApplicationTests {
         PageRequest pageable = PageRequest.of(0, 2);
 
         // when
-        BoardListResponse response = boardService.findAllBoardWithType(boardType, pageable);
+        BoardListResponse response = boardService.findAllBoardWithType(boardType, null, pageable);
 
         // then
         assertThat(response.content().size()).isEqualTo(2);
