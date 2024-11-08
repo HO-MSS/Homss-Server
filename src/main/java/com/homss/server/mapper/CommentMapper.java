@@ -1,6 +1,7 @@
 package com.homss.server.mapper;
 
-import com.homss.server.model.Comment;
+import com.homss.server.model.comment.Comment;
+import com.homss.server.model.comment.CommentStatus;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface CommentMapper {
     void deleteAll();
     List<Comment> findAll();
     Optional<Comment> findById(Long commentId);
+
+    void changeStatus(Long commentId, CommentStatus commentStatus);
 }

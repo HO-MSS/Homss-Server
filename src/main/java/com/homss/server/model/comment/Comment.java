@@ -1,4 +1,4 @@
-package com.homss.server.model;
+package com.homss.server.model.comment;
 
 import com.homss.server.common.modle.TimeModel;
 import lombok.*;
@@ -16,6 +16,7 @@ public class Comment extends TimeModel {
     private Long boardId;
     private Long parentId;
     private String content;
+    private CommentStatus commentStatus;
 
     public static Comment of(Long memberId, Long boardId, String content, Long parentId) {
         return Comment.builder()

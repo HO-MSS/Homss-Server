@@ -23,7 +23,13 @@ public enum ExceptionCode {
     NO_AUTHORIZATION_TOKEN_ERROR("1003", HttpStatus.BAD_REQUEST, "인증 토큰이 존재하지 않음"),
 
     /* Member 에러 (2000~) */
-    MEMBER_NOT_FOUND_ERROR("2000", HttpStatus.BAD_REQUEST, "존재하지 않는 사용자");
+    MEMBER_NOT_FOUND_ERROR("2000", HttpStatus.BAD_REQUEST, "존재하지 않는 사용자"),
+
+    /* Board 에러 (3000~) */
+
+    /* Comment 에러 (4000~) */
+    COMMENT_NOT_FOUND_ERROR("4000", HttpStatus.BAD_REQUEST, "존재하지 않는 댓글"),
+    NOT_COMMENT_AUTHOR_ERROR("4001", HttpStatus.BAD_REQUEST, "댓글의 작성자가 아님");
 
 
     private final String code;
