@@ -26,6 +26,15 @@
         <if test="boardType != null">
             WHERE b.board_type = #{boardType}
         </if>
+        <if test="keyword != null">
+            <if test="boardType == null ">
+                WHERE
+            </if>
+            <if test="boardType != null ">
+                AND
+            </if>
+            b.title LIKE CONCAT('%', #{keyword}, '%')
+        </if>
         GROUP BY b.board_id
         ORDER BY b.created_at DESC
         <if test="pageSize != null">

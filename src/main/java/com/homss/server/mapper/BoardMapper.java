@@ -1,6 +1,7 @@
 package com.homss.server.mapper;
 
 import com.homss.server.dto.response.BoardDetailResponse;
+import com.homss.server.dto.response.BoardListResponse;
 import com.homss.server.dto.response.BoardSimpleResponse;
 import com.homss.server.model.board.Board;
 import com.homss.server.model.board.BoardType;
@@ -14,9 +15,9 @@ public interface BoardMapper {
     void deleteAll();
     List<Board> findAll();
 
-    List<BoardSimpleResponse> findAllByType(BoardType boardType, Long offset, Integer pageSize);
+    List<BoardSimpleResponse> findAllByType(BoardType boardType, String keyword, Long offset, Integer pageSize);
 
-    Long countByType(BoardType boardType);
+    Long countByType(BoardType boardType, String keyword);
 
     void increaseViewNum(Long boardId);
 

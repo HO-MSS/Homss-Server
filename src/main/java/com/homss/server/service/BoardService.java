@@ -42,9 +42,10 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public BoardListResponse findAllBoardWithType(BoardType boardType, Pageable pageable) {
-        List<BoardSimpleResponse> boards = boardMapper.findAllByType(boardType, pageable.getOffset(), pageable.getPageSize());
-        Long boardCount = boardMapper.countByType(boardType);
+    public BoardListResponse findAllBoardWithType(BoardType boardType, String keyword, Pageable pageable) {
+        List<BoardSimpleResponse> boards = boardMapper.findAllByType(boardType, keyword,
+                pageable.getOffset(), pageable.getPageSize());
+        Long boardCount = boardMapper.countByType(boardType, keyword);
         Page<BoardSimpleResponse> boardPage = boardPageConverter.toPage(boards, boardCount, pageable);
 
         return BoardListResponse.from(boardPage);
