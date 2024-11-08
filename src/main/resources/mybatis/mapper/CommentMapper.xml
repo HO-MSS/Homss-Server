@@ -26,4 +26,10 @@
         WHERE c.comment_id = #{commentId}
     </select>
 
+    <update id="changeStatus">
+        UPDATE comment
+        SET comment_status = #{commentStatus}
+        WHERE comment_id = #{commentId}
+    </update>
+
 </mapper>

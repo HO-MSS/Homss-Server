@@ -9,8 +9,8 @@
     <typeAliases>
         <typeAlias type="com.homss.server.model.board.Board" alias="board"/>
         <typeAlias type="com.homss.server.model.board.BoardLike" alias="board_like"/>
-        <typeAlias type="com.homss.server.model.Comment" alias="comment"/>
-        <typeAlias type="com.homss.server.model.CommentLike" alias="comment_like"/>
+        <typeAlias type="com.homss.server.model.comment.Comment" alias="comment"/>
+        <typeAlias type="com.homss.server.model.comment.CommentLike" alias="comment_like"/>
         <typeAlias type="com.homss.server.model.member.Member" alias="member"/>
         <typeAlias type="com.homss.server.model.SolveProblem" alias="solve_problem"/>
     </typeAliases>

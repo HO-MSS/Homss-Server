@@ -1,12 +1,11 @@
 package com.homss.server.mapper;
 
 import com.homss.server.ServerApplicationTests;
-import com.homss.server.common.constant.MemberConstant;
-import com.homss.server.model.Comment;
+import com.homss.server.model.comment.Comment;
 import com.homss.server.model.board.Board;
 import com.homss.server.model.board.BoardType;
+import com.homss.server.model.comment.CommentStatus;
 import com.homss.server.model.member.Member;
-import com.homss.server.model.member.MemberStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,9 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static com.homss.server.model.member.MemberStatus.ACTIVE;
-import static com.homss.server.model.member.MemberStatus.DELETED;
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CommentMapperTest extends ServerApplicationTests {
@@ -112,6 +108,29 @@ public class CommentMapperTest extends ServerApplicationTests {
 
         //then
         assertThat(allComment.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("댓글 상태 변경")
+    void changeStatus_test() {
+        //given
+        Member member = Member.of(1L, "member", "url");
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+        Comment newComment = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        commentMapper.save(newComment);
+
+        CommentStatus status = CommentStatus.DELETED;
+
+        //when
+        commentMapper.changeStatus(newComment.getCommentId(), status);
+
+        //then
+        Comment comment = commentMapper.findById(newComment.getCommentId()).orElse(null);
+
+        assertThat(comment).isNotNull();
+        assertThat(comment.getCommentStatus()).isEqualTo(status);
     }
 
 
