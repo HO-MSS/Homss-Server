@@ -1,8 +1,9 @@
 package com.homss.server.service;
 
+import com.homss.server.common.constant.MemberConstant;
 import com.homss.server.common.exception.ApplicationException;
 import com.homss.server.dto.request.EditMemberProfileRequest;
-import com.homss.server.dto.response.MemberNicknameDuplicateResponse;
+import com.homss.server.dto.response.MemberNicknameAvailability;
 import com.homss.server.mapper.MemberMapper;
 import com.homss.server.model.member.Member;
 import com.homss.server.model.member.MemberStatus;
@@ -19,9 +20,16 @@ public class MemberService {
     private final MemberMapper memberMapper;
 
     @Transactional(readOnly = true)
-    public MemberNicknameDuplicateResponse checkNicknameDuplicate(String nickname) {
+    public MemberNicknameAvailability checkNicknameAvailability(String nickname) {
+        String deleteNickname = MemberConstant.DELETE_MEMBER_NICKNAME.getNickname();
+        String banNickname = MemberConstant.BAN_MEMBER_NICKNAME.getNickname();
+
+        if (nickname.equals(deleteNickname) || nickname.equals(banNickname)) {
+            new MemberNicknameAvailability(false);
+        }
+
         boolean isDuplicate = memberMapper.checkNicknameDuplicate(nickname);
-        return new MemberNicknameDuplicateResponse(isDuplicate);
+        return new MemberNicknameAvailability(isDuplicate);
     }
 
     @Transactional
