@@ -30,4 +30,10 @@ public class AuthController {
         authService.logout(memberId);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/withdraw")
+    public ResponseEntity<Void> withdraw(@CurrentMemberId Long memberId) {
+        authService.withdraw(memberId);
+        return ResponseEntity.ok().build();
+    }
 }

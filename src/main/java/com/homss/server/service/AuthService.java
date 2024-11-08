@@ -1,5 +1,6 @@
 package com.homss.server.service;
 
+import com.homss.server.common.constant.MemberConstant;
 import com.homss.server.common.exception.ApplicationException;
 import com.homss.server.common.exception.ExceptionCode;
 import com.homss.server.common.oauth.KakaoClient;
@@ -9,6 +10,7 @@ import com.homss.server.dto.request.SocialLoginRequest;
 import com.homss.server.dto.response.SocialLoginResponse;
 import com.homss.server.mapper.MemberMapper;
 import com.homss.server.model.member.Member;
+import com.homss.server.model.member.MemberStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,11 @@ public class AuthService {
                 .orElseThrow(() -> ApplicationException.create(MEMBER_NOT_FOUND_ERROR));
 
         changeMemberRefreshToken(member, null);
+    }
+
+    @Transactional
+    public void withdraw(Long memberId) {
+        memberMapper.withdraw(memberId, MemberStatus.DELETED, MemberConstant.DELETE_MEMBER_NICKNAME.getNickname());
     }
 
     private Member getMember(Long socialId) {

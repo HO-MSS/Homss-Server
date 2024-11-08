@@ -48,6 +48,12 @@
         WHERE member_id = #{memberId}
     </update>
 
+    <update id="withdraw">
+        UPDATE member
+        SET social_id = social_id*-1, member_status = #{memberStatus}, nickname = #{nickname}
+        WHERE member_id = #{memberId}
+    </update>
+
 
 
 </mapper>

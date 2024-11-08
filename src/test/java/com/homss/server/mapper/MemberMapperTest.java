@@ -1,7 +1,9 @@
 package com.homss.server.mapper;
 
 import com.homss.server.ServerApplicationTests;
+import com.homss.server.common.constant.MemberConstant;
 import com.homss.server.model.member.Member;
+import com.homss.server.model.member.MemberStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static com.homss.server.model.member.MemberStatus.ACTIVE;
+import static com.homss.server.model.member.MemberStatus.DELETED;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MemberMapperTest extends ServerApplicationTests {
 
@@ -32,7 +36,7 @@ public class MemberMapperTest extends ServerApplicationTests {
         memberMapper.save(newMember);
 
         //then
-        Assertions.assertThat(memberMapper.findAll().size()).isEqualTo(1);
+        assertThat(memberMapper.findAll().size()).isEqualTo(1);
     }
 
     @Test
@@ -48,7 +52,7 @@ public class MemberMapperTest extends ServerApplicationTests {
         memberMapper.deleteAll();
 
         //then
-        Assertions.assertThat(memberMapper.findAll().size()).isEqualTo(0);
+        assertThat(memberMapper.findAll().size()).isEqualTo(0);
     }
 
     @Test
@@ -64,7 +68,7 @@ public class MemberMapperTest extends ServerApplicationTests {
         List<Member> allMember = memberMapper.findAll();
 
         //then
-        Assertions.assertThat(allMember.size()).isEqualTo(2);
+        assertThat(allMember.size()).isEqualTo(2);
     }
     @Test
     @DisplayName("소셜 아이디로 멤버 조회")
@@ -76,8 +80,8 @@ public class MemberMapperTest extends ServerApplicationTests {
         Member member = memberMapper.findBySocialId(1L).orElse(null);
 
         //then
-        Assertions.assertThat(member).isNotNull();
-        Assertions.assertThat(member.getSocialId()).isEqualTo(1L);
+        assertThat(member).isNotNull();
+        assertThat(member.getSocialId()).isEqualTo(1L);
     }
 
     @Test
@@ -91,7 +95,7 @@ public class MemberMapperTest extends ServerApplicationTests {
         boolean isDuplicate = memberMapper.checkNicknameDuplicate(nickname);
 
         //then
-        Assertions.assertThat(isDuplicate).isTrue();
+        assertThat(isDuplicate).isTrue();
     }
 
     @Test
@@ -113,10 +117,10 @@ public class MemberMapperTest extends ServerApplicationTests {
 
         //then
         Member member = memberMapper.findById(newMember.getMemberId()).orElse(null);
-        Assertions.assertThat(member.getNickname()).isEqualTo(nickname);
-        Assertions.assertThat(member.getProfileImage()).isEqualTo(profile);
-        Assertions.assertThat(member.getBaekjoonId()).isEqualTo(baekjoonId);
-        Assertions.assertThat(member.getMemberStatus()).isEqualTo(ACTIVE);
+        assertThat(member.getNickname()).isEqualTo(nickname);
+        assertThat(member.getProfileImage()).isEqualTo(profile);
+        assertThat(member.getBaekjoonId()).isEqualTo(baekjoonId);
+        assertThat(member.getMemberStatus()).isEqualTo(ACTIVE);
     }
 
     @Test
@@ -133,7 +137,26 @@ public class MemberMapperTest extends ServerApplicationTests {
 
         //then
         Member member = memberMapper.findById(newMember.getMemberId()).orElse(null);
-        Assertions.assertThat(member.getRefreshToken()).isEqualTo(refreshToken);
+        assertThat(member.getRefreshToken()).isEqualTo(refreshToken);
+    }
+
+    @Test
+    @DisplayName("사용자의 상태, 닉네임, 소셜아이디를 변경")
+    void withdraw_test() {
+        //given
+        MemberStatus status = DELETED;
+        String nickname = MemberConstant.DELETE_MEMBER_NICKNAME.getNickname();
+        Member newMember = Member.create(1L);
+        memberMapper.save(newMember);
+
+        //when
+        memberMapper.withdraw(newMember.getMemberId(), status, nickname);
+
+        //then
+        Member member = memberMapper.findById(newMember.getMemberId()).orElse(null);
+        assertThat(member.getMemberStatus()).isEqualTo(status);
+        assertThat(member.getNickname()).isEqualTo(nickname);
+        assertThat(member.getSocialId()).isEqualTo(newMember.getSocialId()*-1);
     }
 
 }

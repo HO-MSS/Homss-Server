@@ -1,6 +1,7 @@
 package com.homss.server.mapper;
 
 import com.homss.server.model.member.Member;
+import com.homss.server.model.member.MemberStatus;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface MemberMapper {
     void changeMemberProfile(Member member);
 
     void changeMemberRefreshToken(Member member);
+
+    void withdraw(Long memberId, MemberStatus memberStatus, String nickname);
 }
