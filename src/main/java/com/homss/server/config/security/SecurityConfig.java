@@ -28,7 +28,7 @@ public class SecurityConfig {
             "/api/auth/login",
 
             // board
-            "/api/board/all"
+            "/api/board/all", "/api/board/{boardId}"
     } ;
 
     @Bean

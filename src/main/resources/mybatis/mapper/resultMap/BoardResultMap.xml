@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.mapper.resultMap.BoardResultMap">
+
+    <resultMap id="BoardSimpleResponse" type="com.homss.server.dto.response.BoardSimpleResponse">
+        <id property="boardId" column="board_id"/>
+        <result property="title" column="title"/>
+        <result property="viewNum" column="view_num"/>
+        <result property="boardType" column="board_type"/>
+        <result property="memberId" column="member_id"/>
+        <result property="memberNickname" column="nickname"/>
+        <result property="memberProfileImage" column="profile_image"/>
+        <result property="likeNum" column="bln"/>
+        <result property="commentNum" column="cn"/>
+    </resultMap>
+
+    <resultMap id="BoardDetailResponse" type="com.homss.server.dto.response.BoardDetailResponse">
+        <id property="boardId" column="board_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="boardType" column="board_type"/>
+        <result property="viewNum" column="view_num"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="memberId" column="member_id"/>
+        <result property="memberNickname" column="nickname"/>
+        <result property="memberProfileImage" column="profile_image"/>
+        <result property="likeStatus" column="ls"/>
+        <result property="likeNum" column="ln"/>
+    </resultMap>
+
+</mapper>
