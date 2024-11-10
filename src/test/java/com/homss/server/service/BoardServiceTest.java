@@ -5,13 +5,13 @@ import com.homss.server.dto.request.BoardRequest;
 import com.homss.server.dto.response.BoardDetailResponse;
 import com.homss.server.dto.response.BoardListResponse;
 import com.homss.server.dto.response.BoardSaveResponse;
-import com.homss.server.dto.response.BoardSimpleResponse;
+import com.homss.server.mapper.BoardLikeMapper;
 import com.homss.server.mapper.BoardMapper;
 import com.homss.server.mapper.MemberMapper;
 import com.homss.server.model.board.Board;
+import com.homss.server.model.board.BoardLike;
 import com.homss.server.model.board.BoardType;
 import com.homss.server.model.member.Member;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,10 +31,14 @@ public class BoardServiceTest extends ServerApplicationTests {
     private BoardMapper boardMapper;
 
     @Autowired
+    private BoardLikeMapper boardLikeMapper;
+
+    @Autowired
     private MemberMapper memberMapper;
 
     @AfterEach
     void clean() {
+        boardLikeMapper.deleteAll();
         boardMapper.deleteAll();
         memberMapper.deleteAll();
     }
@@ -120,6 +124,40 @@ public class BoardServiceTest extends ServerApplicationTests {
         assertThat(boardDetail.getBoardId()).isEqualTo(board.getBoardId());
         assertThat(boardDetail.getViewNum()).isEqualTo(1);
 
+    }
+
+    @Test
+    @DisplayName("게시글 좋아요가 없으면 등록")
+    void postBoardLike_save_test() {
+        // given
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+
+        // when
+        boardService.postBoardLike(board.getBoardId(), member.getMemberId());
+
+        // then
+        assertThat(boardLikeMapper.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("게시글 좋아요가 있으면 삭제")
+    void postBoardLike_delete_test() {
+        // given
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+        BoardLike newBoardLike = BoardLike.of(board.getBoardId(), member.getMemberId());
+        boardLikeMapper.save(newBoardLike);
+
+        // when
+        boardService.postBoardLike(board.getBoardId(), member.getMemberId());
+
+        // then
+        assertThat(boardLikeMapper.findAll().size()).isEqualTo(0);
     }
 
 }

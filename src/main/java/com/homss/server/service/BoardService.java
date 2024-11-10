@@ -3,13 +3,12 @@ package com.homss.server.service;
 import com.homss.server.common.exception.ApplicationException;
 import com.homss.server.common.utils.PageConverter;
 import com.homss.server.dto.request.BoardRequest;
-import com.homss.server.dto.response.BoardDetailResponse;
-import com.homss.server.dto.response.BoardListResponse;
-import com.homss.server.dto.response.BoardSaveResponse;
-import com.homss.server.dto.response.BoardSimpleResponse;
+import com.homss.server.dto.response.*;
+import com.homss.server.mapper.BoardLikeMapper;
 import com.homss.server.mapper.BoardMapper;
 import com.homss.server.mapper.MemberMapper;
 import com.homss.server.model.board.Board;
+import com.homss.server.model.board.BoardLike;
 import com.homss.server.model.board.BoardType;
 import com.homss.server.model.member.Member;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +26,7 @@ import static com.homss.server.common.exception.ExceptionCode.MEMBER_NOT_FOUND_E
 public class BoardService {
 
     private final BoardMapper boardMapper;
+    private final BoardLikeMapper boardLikeMapper;
     private final MemberMapper memberMapper;
 
     private final PageConverter<BoardSimpleResponse> boardPageConverter;
@@ -55,5 +55,19 @@ public class BoardService {
     public BoardDetailResponse findById(Long memberId, Long boardId) {
         boardMapper.increaseViewNum(boardId);
         return boardMapper.findDetailById(memberId, boardId);
+    }
+
+    @Transactional
+    public BoardLikeResponse postBoardLike(Long boardId, Long memberId) {
+        Boolean likeStatus = boardLikeMapper.findLikeStatus(memberId, boardId);
+
+        if (likeStatus) {
+            boardLikeMapper.deleteLike(boardId, memberId);
+        } else {
+            BoardLike newBoardLike = BoardLike.of(boardId, memberId);
+            boardLikeMapper.save(newBoardLike);
+        }
+
+        return new BoardLikeResponse(!likeStatus);
     }
 }

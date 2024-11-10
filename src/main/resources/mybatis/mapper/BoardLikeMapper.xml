@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.homss.server.mapper.BoardLikeMapper">
+
+    <delete id="deleteAll">
+        DELETE FROM board_like
+    </delete>
+
+    <select id="findAll" resultType="board_like">
+        SELECT bl.*
+        FROM board_like AS bl
+    </select>
+
+    <select id="findLikeStatus" resultType="boolean">
+        SELECT COUNT(*)>0
+        FROM board_like as bl
+        WHERE bl.board_id = #{boardId} AND bl.member_id = #{memberId}
+    </select>
+
+    <insert id="save">
+        INSERT INTO board_like (board_id, member_id)
+        VALUES (#{boardId}, #{memberId})
+    </insert>
+
+    <delete id="deleteLike">
+        DELETE FROM board_like AS bl
+        WHERE bl.board_id = #{boardId} AND bl.member_id = #{memberId}
+    </delete>
+
+</mapper>
