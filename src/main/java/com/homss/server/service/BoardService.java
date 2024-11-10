@@ -59,7 +59,7 @@ public class BoardService {
 
     @Transactional
     public BoardLikeResponse postBoardLike(Long boardId, Long memberId) {
-        Boolean likeStatus = boardLikeMapper.findLikeStatus(memberId, boardId);
+        Boolean likeStatus = boardLikeMapper.findLikeStatus(boardId, memberId);
 
         if (likeStatus) {
             boardLikeMapper.deleteLike(boardId, memberId);
