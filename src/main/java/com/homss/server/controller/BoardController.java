@@ -3,6 +3,7 @@ package com.homss.server.controller;
 import com.homss.server.common.annotation.CurrentMemberId;
 import com.homss.server.dto.request.BoardRequest;
 import com.homss.server.dto.response.BoardDetailResponse;
+import com.homss.server.dto.response.BoardLikeResponse;
 import com.homss.server.dto.response.BoardListResponse;
 import com.homss.server.dto.response.BoardSaveResponse;
 import com.homss.server.model.board.BoardType;
@@ -25,6 +26,12 @@ public class BoardController {
     public ResponseEntity<BoardSaveResponse> saveBoard(@CurrentMemberId Long memberId,
                                                        @Valid @RequestBody BoardRequest request) {
         BoardSaveResponse response = boardService.saveBoard(memberId, request);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/like/{boardId}")
+    public ResponseEntity<BoardLikeResponse> postBoardLike(@CurrentMemberId Long memberId, @PathVariable Long boardId) {
+        BoardLikeResponse response = boardService.postBoardLike(boardId, memberId);
         return ResponseEntity.ok().body(response);
     }
 

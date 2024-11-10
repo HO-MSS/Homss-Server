@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homss.server.ServerApplicationTests;
 import com.homss.server.common.jwt.JwtProvider;
 import com.homss.server.dto.request.BoardRequest;
+import com.homss.server.mapper.BoardLikeMapper;
 import com.homss.server.mapper.BoardMapper;
 import com.homss.server.mapper.MemberMapper;
 import com.homss.server.model.board.Board;
+import com.homss.server.model.board.BoardLike;
 import com.homss.server.model.board.BoardType;
 import com.homss.server.model.member.Member;
 import org.junit.jupiter.api.AfterEach;
@@ -18,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,11 +45,15 @@ public class BoardControllerTest extends ServerApplicationTests {
     @Autowired
     private BoardMapper boardMapper;
 
+    @Autowired
+    private BoardLikeMapper boardLikeMapper;
+
     @MockBean
     private JwtProvider jwtProvider;
 
     @AfterEach
     void clean() {
+        boardMapper.deleteAll();
         boardMapper.deleteAll();
         memberMapper.deleteAll();
     }
@@ -122,12 +129,33 @@ public class BoardControllerTest extends ServerApplicationTests {
         boardMapper.save(board);
 
         // when & then
-        mockMvc.perform(get("/api/board/"+board.getBoardId())
+        mockMvc.perform(get("/api/board/{boardId}", board.getBoardId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", ACCESS_TOKEN)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.boardId").value(board.getBoardId()));;
+                .andExpect(jsonPath("$.boardId").value(board.getBoardId()));
+    }
+
+    @Test
+    @DisplayName("게시물 좋아요")
+    void postBoardLike_test() throws Exception {
+
+        // given
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+
+        when(jwtProvider.validateToken(any(String.class))).thenReturn(true);
+        when(jwtProvider.getMemberId(any(String.class))).thenReturn(member.getMemberId());
+
+        // when & then
+        mockMvc.perform(post("/api/board/like/{boardId}", board.getBoardId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", ACCESS_TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.likeStatus").value(true));
     }
 
 }
