@@ -38,4 +38,37 @@
         WHERE comment_id = #{commentId}
     </update>
 
+    <select id="findAllByBoardId" resultMap="mybatis.mapper.resultMap.CommentResultMap.CommentResponse" resultType="HashMap">
+        SELECT c.*, m.*,
+            COUNT(cl.comment_like_id) AS cln,
+            (SELECT COUNT(*) > 0
+             FROM comment_like AS cl
+             WHERE cl.comment_id = c.comment_id AND cl.member_id = #{memberId}) AS cls,
+            sc.comment_id AS child_comment_id,
+            sc.parent_id AS child_parent_comment_id,
+            sc.member_id AS child_member_id,
+            sm.nickname AS child_member_nickname,
+            sm.profile_image AS child_member_profile_image,
+            sc.content AS child_content,
+            sc.created_at AS child_created_at,
+            sc.updated_at AS child_updated_at,
+            sc.comment_status AS child_comment_status,
+            COUNT(scl.comment_like_id) AS child_cln,
+            (SELECT COUNT(*) > 0
+             FROM comment_like AS scl
+             WHERE scl.comment_id = sc.comment_id AND scl.member_id = #{memberId}) AS child_cls
+        FROM
+            comment AS c
+                LEFT JOIN member AS m ON m.member_id = c.member_id
+                LEFT JOIN comment_like AS cl ON cl.comment_id = c.comment_id
+                LEFT JOIN comment AS sc ON sc.parent_id = c.comment_id
+                LEFT JOIN member AS sm ON sm.member_id = sc.member_id
+                LEFT JOIN comment_like AS scl ON scl.comment_id = sc.comment_id
+        WHERE
+            c.board_id = #{boardId} AND c.parent_id IS NULL
+        GROUP BY
+            c.comment_id, sc.comment_id
+        ORDER BY c.created_at, sc.created_at
+    </select>
+
 </mapper>

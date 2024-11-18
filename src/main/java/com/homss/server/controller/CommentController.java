@@ -3,11 +3,14 @@ package com.homss.server.controller;
 import com.homss.server.common.annotation.CurrentMemberId;
 import com.homss.server.dto.request.CommentEditRequest;
 import com.homss.server.dto.request.CommentRequest;
+import com.homss.server.dto.response.CommentResponse;
 import com.homss.server.dto.response.LikeResponse;
 import com.homss.server.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/comment")
@@ -42,6 +45,12 @@ public class CommentController {
                                             @RequestBody CommentEditRequest request) {
         commentService.editComment(memberId, commentId, request);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{boardId}")
+    public ResponseEntity<List<CommentResponse>> getAllComment(@CurrentMemberId Long memberId, @PathVariable Long boardId) {
+        List<CommentResponse> response = commentService.getAllComment(memberId, boardId);
+        return ResponseEntity.ok().body(response);
     }
 
 }

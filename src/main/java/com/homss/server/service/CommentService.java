@@ -3,16 +3,18 @@ package com.homss.server.service;
 import com.homss.server.common.exception.ApplicationException;
 import com.homss.server.dto.request.CommentEditRequest;
 import com.homss.server.dto.request.CommentRequest;
+import com.homss.server.dto.response.CommentResponse;
 import com.homss.server.dto.response.LikeResponse;
 import com.homss.server.mapper.CommentLikeMapper;
 import com.homss.server.mapper.CommentMapper;
-import com.homss.server.model.board.BoardLike;
 import com.homss.server.model.comment.Comment;
 import com.homss.server.model.comment.CommentLike;
 import com.homss.server.model.comment.CommentStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.homss.server.common.exception.ExceptionCode.COMMENT_NOT_FOUND_ERROR;
 import static com.homss.server.common.exception.ExceptionCode.NOT_COMMENT_AUTHOR_ERROR;
@@ -66,5 +68,10 @@ public class CommentService {
         }
 
         return new LikeResponse(!likeStatus);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CommentResponse> getAllComment(Long memberId, Long boardId) {
+        return commentMapper.findAllByBoardId(memberId, boardId);
     }
 }
