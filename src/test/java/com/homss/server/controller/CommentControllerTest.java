@@ -156,4 +156,25 @@ public class CommentControllerTest extends ServerApplicationTests {
                 .andExpect(jsonPath("$.likeStatus").value(true));
     }
 
+    @Test
+    @DisplayName("댓글 모두 조회")
+    void getAllComment_test() throws Exception {
+        // given
+        Member member = Member.of(1L, "member", "url");
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+        Comment newComment1 = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        Comment newComment2 = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        commentMapper.save(newComment1);
+        commentMapper.save(newComment2);
+        Comment newComment3 = Comment.of(member.getMemberId(), board.getBoardId(), "content", newComment1.getCommentId());
+        commentMapper.save(newComment3);
+
+        // when & then
+        mockMvc.perform(get("/api/comment/{boardId}", board.getBoardId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
 }

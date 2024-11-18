@@ -1,5 +1,6 @@
 package com.homss.server.mapper;
 
+import com.homss.server.dto.response.CommentResponse;
 import com.homss.server.model.comment.Comment;
 import com.homss.server.model.comment.CommentStatus;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,4 +18,6 @@ public interface CommentMapper {
     void changeStatus(Long commentId, CommentStatus commentStatus);
 
     void edit(Long commentId, String content);
+
+    List<CommentResponse> findAllByBoardId(Long memberId, Long boardId);
 }

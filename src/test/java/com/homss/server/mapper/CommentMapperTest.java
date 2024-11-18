@@ -1,6 +1,7 @@
 package com.homss.server.mapper;
 
 import com.homss.server.ServerApplicationTests;
+import com.homss.server.dto.response.CommentResponse;
 import com.homss.server.model.comment.Comment;
 import com.homss.server.model.board.Board;
 import com.homss.server.model.board.BoardType;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -156,6 +159,65 @@ public class CommentMapperTest extends ServerApplicationTests {
         assertThat(comment).isNotNull();
         assertThat(comment.getContent()).isEqualTo(editContent);
         assertThat(comment.getCommentStatus()).isEqualTo(status);
+    }
+
+    @Test
+    @DisplayName("댓글 리스트 조회")
+    void findAllByBoardId_test() {
+        //given
+        Member member = Member.of(1L, "member", "url");
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+        Comment newComment1 = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        Comment newComment2 = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        commentMapper.save(newComment1);
+        commentMapper.save(newComment2);
+        Comment newComment3 = Comment.of(member.getMemberId(), board.getBoardId(), "content", newComment1.getCommentId());
+        commentMapper.save(newComment3);
+
+
+        //when
+        List<CommentResponse> comments = commentMapper.findAllByBoardId(member.getMemberId(), board.getBoardId());
+
+        //then
+        CommentResponse firstComment = comments.stream().filter(comment -> Objects.equals(comment.getCommentId(), newComment1.getCommentId()))
+                .toList().get(0);
+
+        assertThat(comments.size()).isEqualTo(2);
+        assertThat(firstComment.getCommentId()).isEqualTo(newComment1.getCommentId());
+        assertThat(firstComment.getMemberId()).isEqualTo(member.getMemberId());
+
+    }
+
+    @Test
+    @DisplayName("댓글 리스트 조회 시 대댓글 함께 조회")
+    void findAllByBoardId_subComment_test() {
+        //given
+        Member member = Member.of(1L, "member", "url");
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+        Comment newComment1 = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        Comment newComment2 = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        commentMapper.save(newComment1);
+        commentMapper.save(newComment2);
+        Comment newComment3 = Comment.of(member.getMemberId(), board.getBoardId(), "content", newComment1.getCommentId());
+        commentMapper.save(newComment3);
+
+
+        //when
+        List<CommentResponse> comments = commentMapper.findAllByBoardId(member.getMemberId(), board.getBoardId());
+
+        //then
+        CommentResponse firstComment = comments.stream().filter(comment -> Objects.equals(comment.getCommentId(), newComment1.getCommentId()))
+                .toList().get(0);
+        CommentResponse secondComment = comments.stream().filter(comment -> Objects.equals(comment.getCommentId(), newComment2.getCommentId()))
+                .toList().get(0);
+
+        assertThat(firstComment.getSubComments().size()).isEqualTo(1);
+        assertThat(firstComment.getSubComments().get(0).getCommentId()).isEqualTo(newComment3.getCommentId());
+        assertThat(secondComment.getSubComments().size()).isEqualTo(0);
     }
 
 }

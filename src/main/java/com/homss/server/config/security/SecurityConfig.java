@@ -28,7 +28,10 @@ public class SecurityConfig {
             "/api/auth/login",
 
             // board
-            "/api/board/all", "/api/board/{boardId}"
+            "/api/board/all", "/api/board/{boardId}",
+
+            // comment
+            "/api/comment/{boardId}"
     } ;
 
     @Bean

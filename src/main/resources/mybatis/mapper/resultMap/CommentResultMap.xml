@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.mapper.resultMap.CommentResultMap">
+
+    <resultMap id="CommentResponse" type="com.homss.server.dto.response.CommentResponse">
+        <id property="commentId" column="comment_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="memberNickname" column="nickname"/>
+        <result property="memberProfileImage" column="profile_image"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="commentStatus" column="comment_status"/>
+        <result property="commentLikeNum" column="cln"/>
+        <result property="commentLikeStatus" column="cls"/>
+
+        <collection property="subComments" ofType="com.homss.server.dto.response.SubCommentResponse" notNullColumn="child_comment_id">
+            <id property="commentId" column="child_comment_id"/>
+            <result property="memberId" column="child_member_id"/>
+            <result property="memberNickname" column="child_member_nickname"/>
+            <result property="memberProfileImage" column="child_member_profile_image"/>
+            <result property="content" column="child_content"/>
+            <result property="createdAt" column="child_created_at"/>
+            <result property="updatedAt" column="child_updated_at"/>
+            <result property="commentStatus" column="child_comment_status"/>
+            <result property="commentLikeNum" column="child_cln"/>
+            <result property="commentLikeStatus" column="child_cls"/>
+        </collection>
+
+    </resultMap>
+
+</mapper>

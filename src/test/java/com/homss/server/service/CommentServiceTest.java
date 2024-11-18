@@ -4,6 +4,7 @@ import com.homss.server.ServerApplicationTests;
 import com.homss.server.common.exception.ApplicationException;
 import com.homss.server.dto.request.CommentEditRequest;
 import com.homss.server.dto.request.CommentRequest;
+import com.homss.server.dto.response.CommentResponse;
 import com.homss.server.dto.response.LikeResponse;
 import com.homss.server.mapper.BoardMapper;
 import com.homss.server.mapper.CommentLikeMapper;
@@ -19,6 +20,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.Objects;
 
 import static com.homss.server.common.exception.ExceptionCode.NOT_COMMENT_AUTHOR_ERROR;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -189,6 +193,31 @@ public class CommentServiceTest extends ServerApplicationTests {
 
         // then
         assertThat(response.likeStatus()).isFalse();
+    }
+
+    @Test
+    @DisplayName("댓글 모두 조회")
+    void getAllComment_test() {
+        Member member = Member.of(1L, "member", "url");
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+        Comment newComment1 = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        Comment newComment2 = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        commentMapper.save(newComment1);
+        commentMapper.save(newComment2);
+        Comment newComment3 = Comment.of(member.getMemberId(), board.getBoardId(), "content", newComment1.getCommentId());
+        commentMapper.save(newComment3);
+
+        //when
+        List<CommentResponse> comments = commentService.getAllComment(member.getMemberId(), board.getBoardId());
+
+        // then
+        CommentResponse firstComment = comments.stream().filter(comment -> Objects.equals(comment.getCommentId(), newComment1.getCommentId()))
+                .toList().get(0);
+        assertThat(comments.size()).isEqualTo(2);
+        assertThat(firstComment.getCommentId()).isEqualTo(newComment1.getCommentId());
+
     }
 
 }
