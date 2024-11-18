@@ -58,7 +58,7 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardLikeResponse postBoardLike(Long boardId, Long memberId) {
+    public LikeResponse postBoardLike(Long boardId, Long memberId) {
         Boolean likeStatus = boardLikeMapper.findLikeStatus(boardId, memberId);
 
         if (likeStatus) {
@@ -68,6 +68,6 @@ public class BoardService {
             boardLikeMapper.save(newBoardLike);
         }
 
-        return new BoardLikeResponse(!likeStatus);
+        return new LikeResponse(!likeStatus);
     }
 }

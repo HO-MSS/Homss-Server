@@ -4,12 +4,15 @@ import com.homss.server.ServerApplicationTests;
 import com.homss.server.common.exception.ApplicationException;
 import com.homss.server.dto.request.CommentEditRequest;
 import com.homss.server.dto.request.CommentRequest;
+import com.homss.server.dto.response.LikeResponse;
 import com.homss.server.mapper.BoardMapper;
+import com.homss.server.mapper.CommentLikeMapper;
 import com.homss.server.mapper.CommentMapper;
 import com.homss.server.mapper.MemberMapper;
 import com.homss.server.model.board.Board;
 import com.homss.server.model.board.BoardType;
 import com.homss.server.model.comment.Comment;
+import com.homss.server.model.comment.CommentLike;
 import com.homss.server.model.comment.CommentStatus;
 import com.homss.server.model.member.Member;
 import org.junit.jupiter.api.AfterEach;
@@ -27,6 +30,9 @@ public class CommentServiceTest extends ServerApplicationTests {
     private CommentService commentService;
 
     @Autowired
+    private CommentLikeMapper commentLikeMapper;
+
+    @Autowired
     private CommentMapper commentMapper;
 
     @Autowired
@@ -37,6 +43,7 @@ public class CommentServiceTest extends ServerApplicationTests {
 
     @AfterEach
     void clean() {
+        commentLikeMapper.deleteAll();
         commentMapper.deleteAll();
         boardMapper.deleteAll();
         memberMapper.deleteAll();
@@ -146,6 +153,42 @@ public class CommentServiceTest extends ServerApplicationTests {
         assertThatThrownBy(() -> commentService.editComment(member2.getMemberId(), newComment.getCommentId(), request))
                 .isInstanceOf(ApplicationException.class)
                 .hasMessageContaining(NOT_COMMENT_AUTHOR_ERROR.getMessage());
+    }
+
+    @Test
+    @DisplayName("댓글 좋아요 등록")
+    void postCommentLike_post_test() {
+        Member member = Member.of(1L, "member", "url");
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+        Comment comment = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        commentMapper.save(comment);
+
+        //when
+        LikeResponse response = commentService.postCommentLike(member.getMemberId(), comment.getCommentId());
+
+        // then
+        assertThat(response.likeStatus()).isTrue();
+    }
+
+    @Test
+    @DisplayName("댓글 좋아요 삭제")
+    void postCommentLike_delete_test() {
+        Member member = Member.of(1L, "member", "url");
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+        Comment comment = Comment.of(member.getMemberId(), board.getBoardId(), "content", null);
+        commentMapper.save(comment);
+        CommentLike commentLike = CommentLike.of(comment.getCommentId(), member.getMemberId());
+        commentLikeMapper.save(commentLike);
+
+        //when
+        LikeResponse response = commentService.postCommentLike(member.getMemberId(), comment.getCommentId());
+
+        // then
+        assertThat(response.likeStatus()).isFalse();
     }
 
 }

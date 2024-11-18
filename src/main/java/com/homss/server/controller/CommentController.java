@@ -3,6 +3,7 @@ package com.homss.server.controller;
 import com.homss.server.common.annotation.CurrentMemberId;
 import com.homss.server.dto.request.CommentEditRequest;
 import com.homss.server.dto.request.CommentRequest;
+import com.homss.server.dto.response.LikeResponse;
 import com.homss.server.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,12 @@ public class CommentController {
                                             @RequestBody CommentRequest request) {
         commentService.saveComment(memberId, boardId, request);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/like/{commentId}")
+    public ResponseEntity<LikeResponse> postCommentLike(@CurrentMemberId Long memberId, @PathVariable Long commentId) {
+        LikeResponse response = commentService.postCommentLike(memberId, commentId);
+        return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping("/{commentId}")
