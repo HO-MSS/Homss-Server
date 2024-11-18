@@ -3,7 +3,7 @@ package com.homss.server.controller;
 import com.homss.server.common.annotation.CurrentMemberId;
 import com.homss.server.dto.request.BoardRequest;
 import com.homss.server.dto.response.BoardDetailResponse;
-import com.homss.server.dto.response.BoardLikeResponse;
+import com.homss.server.dto.response.LikeResponse;
 import com.homss.server.dto.response.BoardListResponse;
 import com.homss.server.dto.response.BoardSaveResponse;
 import com.homss.server.model.board.BoardType;
@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,8 +29,8 @@ public class BoardController {
     }
 
     @PostMapping("/like/{boardId}")
-    public ResponseEntity<BoardLikeResponse> postBoardLike(@CurrentMemberId Long memberId, @PathVariable Long boardId) {
-        BoardLikeResponse response = boardService.postBoardLike(boardId, memberId);
+    public ResponseEntity<LikeResponse> postBoardLike(@CurrentMemberId Long memberId, @PathVariable Long boardId) {
+        LikeResponse response = boardService.postBoardLike(boardId, memberId);
         return ResponseEntity.ok().body(response);
     }
 

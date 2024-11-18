@@ -3,8 +3,12 @@ package com.homss.server.service;
 import com.homss.server.common.exception.ApplicationException;
 import com.homss.server.dto.request.CommentEditRequest;
 import com.homss.server.dto.request.CommentRequest;
+import com.homss.server.dto.response.LikeResponse;
+import com.homss.server.mapper.CommentLikeMapper;
 import com.homss.server.mapper.CommentMapper;
+import com.homss.server.model.board.BoardLike;
 import com.homss.server.model.comment.Comment;
+import com.homss.server.model.comment.CommentLike;
 import com.homss.server.model.comment.CommentStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,7 @@ import static com.homss.server.common.exception.ExceptionCode.NOT_COMMENT_AUTHOR
 public class CommentService {
 
     private final CommentMapper commentMapper;
+    private final CommentLikeMapper commentLikeMapper;
 
     @Transactional
     public void saveComment(Long memberId, Long boardId, CommentRequest request) {
@@ -47,5 +52,19 @@ public class CommentService {
         }
 
         commentMapper.edit(commentId, request.content());
+    }
+
+    @Transactional
+    public LikeResponse postCommentLike(Long memberId, Long commentId) {
+        Boolean likeStatus = commentLikeMapper.findLikeStatus(commentId, memberId);
+
+        if (likeStatus) {
+            commentLikeMapper.deleteLike(commentId, memberId);
+        } else {
+            CommentLike newCommentLike = CommentLike.of(commentId, memberId);
+            commentLikeMapper.save(newCommentLike);
+        }
+
+        return new LikeResponse(!likeStatus);
     }
 }

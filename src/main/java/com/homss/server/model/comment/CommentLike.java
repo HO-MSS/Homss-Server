@@ -1,14 +1,11 @@
 package com.homss.server.model.comment;
 
 import com.homss.server.common.modle.TimeModel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.apache.ibatis.type.Alias;
 
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Alias("comment_like")
@@ -17,5 +14,12 @@ public class CommentLike extends TimeModel {
     private Long commentLikeId;
     private Long commentId;
     private Long memberId;
+
+    public static CommentLike of(Long commentId, Long memberId) {
+        return CommentLike.builder()
+                .commentId(commentId)
+                .memberId(memberId)
+                .build();
+    }
 
 }
