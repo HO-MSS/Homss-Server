@@ -3,6 +3,7 @@ package com.homss.server.service;
 import com.homss.server.common.constant.MemberConstant;
 import com.homss.server.common.exception.ApplicationException;
 import com.homss.server.dto.request.EditMemberProfileRequest;
+import com.homss.server.dto.response.MemberMypageReponse;
 import com.homss.server.dto.response.MemberNicknameAvailability;
 import com.homss.server.mapper.MemberMapper;
 import com.homss.server.model.member.Member;
@@ -43,6 +44,13 @@ public class MemberService {
         member.changeMemberStatus(MemberStatus.ACTIVE);
 
         memberMapper.changeMemberProfile(member);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberMypageReponse getMemberMypage(Long memberId) {
+        Member member = memberMapper.findById(memberId)
+                .orElseThrow(() -> ApplicationException.create(MEMBER_NOT_FOUND_ERROR));
+        return MemberMypageReponse.from(member);
     }
 
 }

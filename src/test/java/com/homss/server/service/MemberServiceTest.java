@@ -2,6 +2,7 @@ package com.homss.server.service;
 
 import com.homss.server.ServerApplicationTests;
 import com.homss.server.dto.request.EditMemberProfileRequest;
+import com.homss.server.dto.response.MemberMypageReponse;
 import com.homss.server.dto.response.MemberNicknameAvailability;
 import com.homss.server.mapper.MemberMapper;
 import com.homss.server.model.member.Member;
@@ -61,6 +62,21 @@ public class MemberServiceTest extends ServerApplicationTests {
         assertThat(member.getProfileImage()).isEqualTo(profileImage);
         assertThat(member.getBaekjoonId()).isEqualTo(baekjoonId);
         assertThat(member.getMemberStatus()).isEqualTo(ACTIVE);
+    }
+
+    @Test
+    @DisplayName("사용자 마이페이지 조회")
+    void getMemberMypage_test() {
+        // given
+        Member member = Member.of(1L, "nickname", "image");
+        memberMapper.save(member);
+
+        // when
+        MemberMypageReponse response = memberService.getMemberMypage(member.getMemberId());
+
+        // then
+        assertThat(response.getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(response.getNickname()).isEqualTo(member.getNickname());
     }
 
 }
