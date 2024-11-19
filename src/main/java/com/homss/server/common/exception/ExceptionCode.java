@@ -26,6 +26,8 @@ public enum ExceptionCode {
     MEMBER_NOT_FOUND_ERROR("2000", HttpStatus.BAD_REQUEST, "존재하지 않는 사용자"),
 
     /* Board 에러 (3000~) */
+    BOARD_NOT_FOUND_ERROR("3000", HttpStatus.BAD_REQUEST, "존재하지 않는 게시글"),
+    NOT_BOARD_AUTHOR_ERROR("3001", HttpStatus.BAD_REQUEST, "게시글의 작성자가 아님"),
 
     /* Comment 에러 (4000~) */
     COMMENT_NOT_FOUND_ERROR("4000", HttpStatus.BAD_REQUEST, "존재하지 않는 댓글"),

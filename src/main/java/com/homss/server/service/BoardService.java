@@ -9,6 +9,7 @@ import com.homss.server.mapper.BoardMapper;
 import com.homss.server.mapper.MemberMapper;
 import com.homss.server.model.board.Board;
 import com.homss.server.model.board.BoardLike;
+import com.homss.server.model.board.BoardStatus;
 import com.homss.server.model.board.BoardType;
 import com.homss.server.model.member.Member;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.homss.server.common.exception.ExceptionCode.MEMBER_NOT_FOUND_ERROR;
+import static com.homss.server.common.exception.ExceptionCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -69,5 +70,17 @@ public class BoardService {
         }
 
         return new LikeResponse(!likeStatus);
+    }
+
+    @Transactional
+    public void deleteById(Long memberId, Long boardId) {
+        Board board = boardMapper.findById(boardId)
+                .orElseThrow(() -> ApplicationException.create(BOARD_NOT_FOUND_ERROR));
+
+        if (!board.getMemberId().equals(memberId)) {
+            throw ApplicationException.create(NOT_BOARD_AUTHOR_ERROR);
+        }
+
+        boardMapper.changeStatus(boardId, BoardStatus.DELETE);
     }
 }
