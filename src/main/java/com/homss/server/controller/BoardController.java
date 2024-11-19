@@ -48,4 +48,10 @@ public class BoardController {
         return ResponseEntity.ok().body(response);
     }
 
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<Void> deleteById(@CurrentMemberId Long memberId, @PathVariable Long boardId) {
+        boardService.deleteById(memberId, boardId);
+        return ResponseEntity.ok().build();
+    }
+
 }

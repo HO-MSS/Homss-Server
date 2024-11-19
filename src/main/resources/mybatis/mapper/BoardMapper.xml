@@ -23,17 +23,12 @@
         FROM board as b LEFT JOIN member as m ON b.member_id = m.member_id
         LEFT JOIN board_like as bl ON b.board_id = bl.board_id
         LEFT JOIN comment as c ON b.board_id = c.board_id
+        WHERE board_status = 'ACTIVE'
         <if test="boardType != null">
-            WHERE b.board_type = #{boardType}
+            AND b.board_type = #{boardType}
         </if>
         <if test="keyword != null">
-            <if test="boardType == null ">
-                WHERE
-            </if>
-            <if test="boardType != null ">
-                AND
-            </if>
-            b.title LIKE CONCAT('%', #{keyword}, '%')
+            AND b.title LIKE CONCAT('%', #{keyword}, '%')
         </if>
         GROUP BY b.board_id
         ORDER BY b.created_at DESC
@@ -49,8 +44,9 @@
     <select id="countByType" resultType="long">
         SELECT COUNT(*)
         FROM board as b
+        WHERE b.board_status = 'ACTIVE'
         <if test="boardType != null">
-            WHERE b.board_type = #{boardType}
+            AND b.board_type = #{boardType}
         </if>
     </select>
 
@@ -75,5 +71,17 @@
         WHERE b.board_id = #{boardId}
         GROUP BY b.board_id
     </select>
+
+    <select id="findById" resultType="board">
+        SELECT b.*
+        FROM board as b
+        WHERE b.board_id = #{boardId}
+    </select>
+
+    <update id="changeStatus">
+        UPDATE board
+        SET board_status = #{boardStatus}
+        WHERE board_id = #{boardId}
+    </update>
 
 </mapper>
