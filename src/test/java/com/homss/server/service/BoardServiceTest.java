@@ -6,7 +6,7 @@ import com.homss.server.common.exception.ExceptionCode;
 import com.homss.server.dto.request.BoardRequest;
 import com.homss.server.dto.response.BoardDetailResponse;
 import com.homss.server.dto.response.BoardListResponse;
-import com.homss.server.dto.response.BoardSaveResponse;
+import com.homss.server.dto.response.BoardIdResponse;
 import com.homss.server.mapper.BoardLikeMapper;
 import com.homss.server.mapper.BoardMapper;
 import com.homss.server.mapper.MemberMapper;
@@ -56,7 +56,7 @@ public class BoardServiceTest extends ServerApplicationTests {
         memberMapper.save(member);
 
         // when
-        BoardSaveResponse response = boardService.saveBoard(member.getMemberId(), request);
+        BoardIdResponse response = boardService.saveBoard(member.getMemberId(), request);
 
         // then
         List<Board> boards = boardMapper.findAll();
@@ -210,6 +210,66 @@ public class BoardServiceTest extends ServerApplicationTests {
 
         // when & then
         assertThatThrownBy(() -> boardService.deleteById(NOT_AUTHOR_MEMBER_ID, newBoard.getBoardId()))
+                .isInstanceOf(ApplicationException.class)
+                .hasMessageContaining(ExceptionCode.NOT_BOARD_AUTHOR_ERROR.getMessage());
+    }
+
+    @Test
+    @DisplayName("게시글 수정")
+    void editBoard_test() {
+        // given
+        String newTitle = "newTitle";
+        String newContent = "newContent";
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content");
+        boardMapper.save(board);
+
+        BoardRequest request = new BoardRequest(BoardType.QNA, newTitle, newContent);
+
+        // when
+        BoardIdResponse response = boardService.editBoard(member.getMemberId(), board.getBoardId(), request);
+
+        // then
+        assertThat(response.boardId()).isEqualTo(board.getBoardId());
+    }
+
+    @Test
+    @DisplayName("게시글 수정 시, 존재하지 않는 게시글일 경우 예외 발생")
+    void editBoard_BoardNotFoundException_test() {
+        // given
+        Long NOT_EXIST_BOARD_ID = -1L;
+        String newTitle = "newTitle";
+        String newContent = "newContent";
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content");
+        boardMapper.save(board);
+
+        BoardRequest request = new BoardRequest(BoardType.QNA, newTitle, newContent);
+
+        // when & then
+        assertThatThrownBy(() -> boardService.editBoard(member.getMemberId(), NOT_EXIST_BOARD_ID, request))
+                .isInstanceOf(ApplicationException.class)
+                .hasMessageContaining(ExceptionCode.BOARD_NOT_FOUND_ERROR.getMessage());
+    }
+
+    @Test
+    @DisplayName("게시글 수정 시, 작성자와 요청자가 일치하지 않을 경우 예외 발생")
+    void editBoard_NotMatchBoardAuthorException_test() {
+        // given
+        Long NOT_AUTHOR_MEMBER_ID = -1L;
+        String newTitle = "newTitle";
+        String newContent = "newContent";
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content");
+        boardMapper.save(board);
+
+        BoardRequest request = new BoardRequest(BoardType.QNA, newTitle, newContent);
+
+        // when & then
+        assertThatThrownBy(() -> boardService.editBoard(NOT_AUTHOR_MEMBER_ID, board.getBoardId(), request))
                 .isInstanceOf(ApplicationException.class)
                 .hasMessageContaining(ExceptionCode.NOT_BOARD_AUTHOR_ERROR.getMessage());
     }

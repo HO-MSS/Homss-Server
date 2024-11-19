@@ -177,4 +177,28 @@ public class BoardControllerTest extends ServerApplicationTests {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    @DisplayName("게시물 수정")
+    void editBoard_test() throws Exception {
+
+        // given
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+
+        when(jwtProvider.validateToken(any(String.class))).thenReturn(true);
+        when(jwtProvider.getMemberId(any(String.class))).thenReturn(member.getMemberId());
+
+        BoardRequest request = new BoardRequest(BoardType.QNA, "newTitle", "newContent");
+
+        // when & then
+        mockMvc.perform(put("/api/board/{boardId}", board.getBoardId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", ACCESS_TOKEN)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.boardId").value(board.getBoardId()));
+    }
+
 }
