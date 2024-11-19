@@ -2,6 +2,7 @@ package com.homss.server.controller;
 
 import com.homss.server.common.annotation.CurrentMemberId;
 import com.homss.server.dto.request.EditMemberProfileRequest;
+import com.homss.server.dto.response.MemberMypageReponse;
 import com.homss.server.dto.response.MemberNicknameAvailability;
 import com.homss.server.service.MemberService;
 import jakarta.validation.Valid;
@@ -19,6 +20,12 @@ public class MemberController {
     @GetMapping("/availability/{nickname}")
     public ResponseEntity<MemberNicknameAvailability> checkNicknameAvailability(@PathVariable String nickname) {
         MemberNicknameAvailability response = memberService.checkNicknameAvailability(nickname);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/mypage")
+        public ResponseEntity<MemberMypageReponse> getMemberMypage(@CurrentMemberId Long memberId) {
+        MemberMypageReponse response = memberService.getMemberMypage(memberId);
         return ResponseEntity.ok().body(response);
     }
 
