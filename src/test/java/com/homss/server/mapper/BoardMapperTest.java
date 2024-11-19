@@ -129,7 +129,7 @@ public class BoardMapperTest extends ServerApplicationTests {
             // Delete Board
         Board deletedBoard = Board.of(member.getMemberId(), BoardType.NOTICE, "del title", "content");
         boardMapper.save(deletedBoard);
-        boardMapper.changeStatus(deletedBoard.getBoardId(), BoardStatus.DELETE);
+        boardMapper.changeStatusById(deletedBoard.getBoardId(), BoardStatus.DELETE);
 
         // when
         Long count = boardMapper.countByType(BoardType.NOTICE, null);
@@ -152,7 +152,7 @@ public class BoardMapperTest extends ServerApplicationTests {
             // Delete Board
         Board deletedBoard = Board.of(member.getMemberId(), BoardType.NOTICE, "del title", "content");
         boardMapper.save(deletedBoard);
-        boardMapper.changeStatus(deletedBoard.getBoardId(), BoardStatus.DELETE);
+        boardMapper.changeStatusById(deletedBoard.getBoardId(), BoardStatus.DELETE);
 
         // when
         List<BoardSimpleResponse> boards = boardMapper.findAllByType(null, null, 0L, 10);
@@ -227,8 +227,8 @@ public class BoardMapperTest extends ServerApplicationTests {
     }
 
     @Test
-    @DisplayName("게시글 상 태변경")
-    void changeStatus_test() {
+    @DisplayName("게시글 상태 변경")
+    void changeStatusById_test() {
         // given
         Member member = Member.create(1L);
         memberMapper.save(member);
@@ -236,12 +236,34 @@ public class BoardMapperTest extends ServerApplicationTests {
         boardMapper.save(newBoard);
 
         // when
-        boardMapper.changeStatus(newBoard.getBoardId(), BoardStatus.DELETE);
+        boardMapper.changeStatusById(newBoard.getBoardId(), BoardStatus.DELETE);
 
         // then
         Board board = boardMapper.findById(newBoard.getBoardId()).orElse(null);
         assertThat(board).isNotNull();
         assertThat(board.getBoardStatus()).isEqualTo(BoardStatus.DELETE);
+    }
+
+    @Test
+    @DisplayName("게시글 수정")
+    void editById_test() {
+        // given
+        String newTitle = "newTitle";
+        String newContent = "newContent";
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board newBoard = Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content");
+        boardMapper.save(newBoard);
+
+        // when
+        boardMapper.editById(newBoard.getBoardId(), BoardType.QNA, newTitle, newContent);
+
+        // then
+        Board board = boardMapper.findById(newBoard.getBoardId()).orElse(null);
+        assertThat(board).isNotNull();
+        assertThat(board.getBoardType()).isEqualTo(BoardType.QNA);
+        assertThat(board.getTitle()).isEqualTo(newTitle);
+        assertThat(board.getContent()).isEqualTo(newContent);
     }
 
 }
