@@ -28,6 +28,7 @@ public interface BoardMapper {
 
     Optional<Board> findById(Long boardId);
 
-    void changeStatus(Long boardId, BoardStatus boardStatus);
+    void changeStatusById(Long boardId, BoardStatus boardStatus);
 
+    void editById(Long boardId, BoardType boardType, String title, String content);
 }

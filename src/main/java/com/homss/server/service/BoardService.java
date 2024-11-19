@@ -33,13 +33,13 @@ public class BoardService {
     private final PageConverter<BoardSimpleResponse> boardPageConverter;
 
     @Transactional
-    public BoardSaveResponse saveBoard(Long memberId, BoardRequest request) {
+    public BoardIdResponse saveBoard(Long memberId, BoardRequest request) {
         Member member = memberMapper.findById(memberId)
                 .orElseThrow(() -> ApplicationException.create(MEMBER_NOT_FOUND_ERROR));
 
         Board board = Board.of(member.getMemberId(), request.boardType(), request.title(), request.content());
         boardMapper.save(board);
-        return BoardSaveResponse.from(board);
+        return BoardIdResponse.from(board);
     }
 
     @Transactional(readOnly = true)
@@ -81,6 +81,19 @@ public class BoardService {
             throw ApplicationException.create(NOT_BOARD_AUTHOR_ERROR);
         }
 
-        boardMapper.changeStatus(boardId, BoardStatus.DELETE);
+        boardMapper.changeStatusById(boardId, BoardStatus.DELETE);
+    }
+
+    @Transactional
+    public BoardIdResponse editBoard(Long memberId, Long boardId, BoardRequest request) {
+        Board board = boardMapper.findById(boardId)
+                .orElseThrow(() -> ApplicationException.create(BOARD_NOT_FOUND_ERROR));
+
+        if (!board.getMemberId().equals(memberId)) {
+            throw ApplicationException.create(NOT_BOARD_AUTHOR_ERROR);
+        }
+
+        boardMapper.editById(boardId, request.boardType(), request.title(), request.content());
+        return BoardIdResponse.from(board);
     }
 }

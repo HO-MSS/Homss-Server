@@ -5,7 +5,7 @@ import com.homss.server.dto.request.BoardRequest;
 import com.homss.server.dto.response.BoardDetailResponse;
 import com.homss.server.dto.response.LikeResponse;
 import com.homss.server.dto.response.BoardListResponse;
-import com.homss.server.dto.response.BoardSaveResponse;
+import com.homss.server.dto.response.BoardIdResponse;
 import com.homss.server.model.board.BoardType;
 import com.homss.server.service.BoardService;
 import jakarta.validation.Valid;
@@ -22,15 +22,23 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping()
-    public ResponseEntity<BoardSaveResponse> saveBoard(@CurrentMemberId Long memberId,
-                                                       @Valid @RequestBody BoardRequest request) {
-        BoardSaveResponse response = boardService.saveBoard(memberId, request);
+    public ResponseEntity<BoardIdResponse> saveBoard(@CurrentMemberId Long memberId,
+                                                     @Valid @RequestBody BoardRequest request) {
+        BoardIdResponse response = boardService.saveBoard(memberId, request);
         return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("/like/{boardId}")
     public ResponseEntity<LikeResponse> postBoardLike(@CurrentMemberId Long memberId, @PathVariable Long boardId) {
         LikeResponse response = boardService.postBoardLike(boardId, memberId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PutMapping("/{boardId}")
+    public ResponseEntity<BoardIdResponse> editBoard(@CurrentMemberId Long memberId,
+                                                     @PathVariable Long boardId,
+                                                     @RequestBody BoardRequest request) {
+        BoardIdResponse response = boardService.editBoard(memberId, boardId, request);
         return ResponseEntity.ok().body(response);
     }
 

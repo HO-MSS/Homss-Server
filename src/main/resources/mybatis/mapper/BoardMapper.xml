@@ -78,9 +78,15 @@
         WHERE b.board_id = #{boardId}
     </select>
 
-    <update id="changeStatus">
+    <update id="changeStatusById">
         UPDATE board
         SET board_status = #{boardStatus}
+        WHERE board_id = #{boardId}
+    </update>
+
+    <update id="editById">
+        UPDATE board
+        SET board_type = #{boardType}, title = #{title}, content = #{content}
         WHERE board_id = #{boardId}
     </update>
 
