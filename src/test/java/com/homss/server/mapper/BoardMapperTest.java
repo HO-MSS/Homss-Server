@@ -13,10 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class BoardMapperTest extends ServerApplicationTests {
 
@@ -99,12 +97,12 @@ public class BoardMapperTest extends ServerApplicationTests {
     }
 
     @Test
-    @DisplayName("게시글 타입에 따라 모두 조회")
+    @DisplayName("게시글 타입에 따라 페이지를 모두 조회")
     void findAllByType_Pageable_test() {
         // given
+        Member member = Member.create(1L);
+        memberMapper.save(member);
         for (int i=0; i<3; i++) {
-            Member member = Member.create((long) i);
-            memberMapper.save(member);
             boardMapper.save(Board.of(member.getMemberId(), BoardType.NOTICE, "title" + i, "content"));
         }
 
@@ -120,11 +118,18 @@ public class BoardMapperTest extends ServerApplicationTests {
     void countByType_test() {
         // given
         int COUNT = 3;
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+
+            // Active Board
         for (int i=0; i<COUNT; i++) {
-            Member member = Member.create((long) i);
-            memberMapper.save(member);
             boardMapper.save(Board.of(member.getMemberId(), BoardType.NOTICE, "title" + i, "content"));
         }
+
+            // Delete Board
+        Board deletedBoard = Board.of(member.getMemberId(), BoardType.NOTICE, "del title", "content");
+        boardMapper.save(deletedBoard);
+        boardMapper.changeStatus(deletedBoard.getBoardId(), BoardStatus.DELETE);
 
         // when
         Long count = boardMapper.countByType(BoardType.NOTICE, null);
@@ -137,12 +142,17 @@ public class BoardMapperTest extends ServerApplicationTests {
     @DisplayName("게시글 모두 조회 시 타입이 없으면 모든 타입 게시글을 조회")
     void findAllByType_WithoutType_test() {
         // given
-        Member member1 = Member.create(1L);
-        Member member2 = Member.create(2L);
-        memberMapper.save(member1);
-        memberMapper.save(member2);
-        boardMapper.save(Board.of(member1.getMemberId(), BoardType.NOTICE, "title1", "content"));
-        boardMapper.save(Board.of(member2.getMemberId(), BoardType.QNA, "title2", "content"));
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+
+            // Active Board
+        boardMapper.save(Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content"));
+        boardMapper.save(Board.of(member.getMemberId(), BoardType.QNA, "title2", "content"));
+
+            // Delete Board
+        Board deletedBoard = Board.of(member.getMemberId(), BoardType.NOTICE, "del title", "content");
+        boardMapper.save(deletedBoard);
+        boardMapper.changeStatus(deletedBoard.getBoardId(), BoardStatus.DELETE);
 
         // when
         List<BoardSimpleResponse> boards = boardMapper.findAllByType(null, null, 0L, 10);
