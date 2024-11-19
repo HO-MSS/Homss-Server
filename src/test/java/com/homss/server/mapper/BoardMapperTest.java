@@ -4,6 +4,7 @@ import com.homss.server.ServerApplicationTests;
 import com.homss.server.dto.response.BoardDetailResponse;
 import com.homss.server.dto.response.BoardSimpleResponse;
 import com.homss.server.model.board.Board;
+import com.homss.server.model.board.BoardStatus;
 import com.homss.server.model.board.BoardType;
 import com.homss.server.model.member.Member;
 import org.junit.jupiter.api.AfterEach;
@@ -12,8 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class BoardMapperTest extends ServerApplicationTests {
 
@@ -194,6 +197,41 @@ public class BoardMapperTest extends ServerApplicationTests {
         // then
         assertThat(allBoards.size()).isEqualTo(3);
         assertThat(noticeBoards.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("게시글 아이디로 조회")
+    void findById_test() {
+        // given
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board newBoard = Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content");
+        boardMapper.save(newBoard);
+
+        // when
+        Board board = boardMapper.findById(newBoard.getBoardId()).orElse(null);
+
+        // then
+        assertThat(board).isNotNull();
+        assertThat(board.getBoardId()).isEqualTo(newBoard.getBoardId());
+    }
+
+    @Test
+    @DisplayName("게시글 상 태변경")
+    void changeStatus_test() {
+        // given
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board newBoard = Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content");
+        boardMapper.save(newBoard);
+
+        // when
+        boardMapper.changeStatus(newBoard.getBoardId(), BoardStatus.DELETE);
+
+        // then
+        Board board = boardMapper.findById(newBoard.getBoardId()).orElse(null);
+        assertThat(board).isNotNull();
+        assertThat(board.getBoardStatus()).isEqualTo(BoardStatus.DELETE);
     }
 
 }

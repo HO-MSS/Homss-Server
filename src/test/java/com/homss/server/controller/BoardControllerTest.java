@@ -23,8 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -156,6 +155,26 @@ public class BoardControllerTest extends ServerApplicationTests {
                         .header("Authorization", ACCESS_TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.likeStatus").value(true));
+    }
+
+    @Test
+    @DisplayName("게시물 삭제")
+    void deleteBoard_test() throws Exception {
+
+        // given
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board board = Board.of(member.getMemberId(), BoardType.NOTICE, "title", "content");
+        boardMapper.save(board);
+
+        when(jwtProvider.validateToken(any(String.class))).thenReturn(true);
+        when(jwtProvider.getMemberId(any(String.class))).thenReturn(member.getMemberId());
+
+        // when & then
+        mockMvc.perform(delete("/api/board/{boardId}", board.getBoardId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", ACCESS_TOKEN))
+                .andExpect(status().isOk());
     }
 
 }

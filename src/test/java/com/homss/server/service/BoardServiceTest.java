@@ -1,6 +1,8 @@
 package com.homss.server.service;
 
 import com.homss.server.ServerApplicationTests;
+import com.homss.server.common.exception.ApplicationException;
+import com.homss.server.common.exception.ExceptionCode;
 import com.homss.server.dto.request.BoardRequest;
 import com.homss.server.dto.response.BoardDetailResponse;
 import com.homss.server.dto.response.BoardListResponse;
@@ -10,6 +12,7 @@ import com.homss.server.mapper.BoardMapper;
 import com.homss.server.mapper.MemberMapper;
 import com.homss.server.model.board.Board;
 import com.homss.server.model.board.BoardLike;
+import com.homss.server.model.board.BoardStatus;
 import com.homss.server.model.board.BoardType;
 import com.homss.server.model.member.Member;
 import org.junit.jupiter.api.AfterEach;
@@ -21,6 +24,7 @@ import org.springframework.data.domain.PageRequest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class BoardServiceTest extends ServerApplicationTests {
 
@@ -158,6 +162,56 @@ public class BoardServiceTest extends ServerApplicationTests {
 
         // then
         assertThat(boardLikeMapper.findAll().size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 조회")
+    void deleteById_test() {
+        // given
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board newBoard = Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content");
+        boardMapper.save(newBoard);
+
+        // when
+        boardService.deleteById(member.getMemberId(), newBoard.getBoardId());
+
+        // then
+        Board board = boardMapper.findById(newBoard.getBoardId()).orElse(null);
+        assertThat(board).isNotNull();
+        assertThat(board.getBoardStatus()).isEqualTo(BoardStatus.DELETE);
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 시, 존재하지 않는 게시글일 경우 예외 발생")
+    void deleteById_BoardNotFoundException_test() {
+        // given
+        Long NOT_EXIST_BOARD_ID = -1L;
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board newBoard = Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content");
+        boardMapper.save(newBoard);
+
+        // when & then
+        assertThatThrownBy(() -> boardService.deleteById(member.getMemberId(), NOT_EXIST_BOARD_ID))
+                .isInstanceOf(ApplicationException.class)
+                .hasMessageContaining(ExceptionCode.BOARD_NOT_FOUND_ERROR.getMessage());
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 시, 작성자와 요청자가 일치하지 않을 경우 예외 발생")
+    void deleteById_NotMatchBoardAuthorException_test() {
+        // given
+        Long NOT_AUTHOR_MEMBER_ID = -1L;
+        Member member = Member.create(1L);
+        memberMapper.save(member);
+        Board newBoard = Board.of(member.getMemberId(), BoardType.NOTICE, "title1", "content");
+        boardMapper.save(newBoard);
+
+        // when & then
+        assertThatThrownBy(() -> boardService.deleteById(NOT_AUTHOR_MEMBER_ID, newBoard.getBoardId()))
+                .isInstanceOf(ApplicationException.class)
+                .hasMessageContaining(ExceptionCode.NOT_BOARD_AUTHOR_ERROR.getMessage());
     }
 
 }
