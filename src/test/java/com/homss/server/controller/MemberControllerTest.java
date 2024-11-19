@@ -86,4 +86,24 @@ public class MemberControllerTest extends ServerApplicationTests {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @DisplayName("사용자 마이페이지 조회")
+    void getMemberMypage_test() throws Exception {
+        // given
+        Member member = Member.of(1L, "nickname", "image");
+        memberMapper.save(member);
+
+        when(jwtProvider.validateToken(any(String.class))).thenReturn(true);
+        when(jwtProvider.getMemberId(any(String.class))).thenReturn(member.getMemberId());
+
+        // when & then
+        mockMvc.perform(get("/api/member/mypage")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", ACCESS_TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.memberId").value(member.getMemberId()))
+                .andExpect(jsonPath("$.nickname").value(member.getNickname()));
+    }
+
 }
